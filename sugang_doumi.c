@@ -8,19 +8,21 @@ enum boolean {
 };
 
 enum initial_choice {
-	LOGIN, FIND_PASSWD, SIGN_UP, INITIAL_EXIT
+	LOGIN = 1, FIND_PASSWD, SIGN_UP, INITIAL_EXIT
 };
 
 enum main_choice {
-	CALCULATE_GPA, EVALUATE_LECTURE, MANAGE_SCHEDULE, CHANGE_PASSWD, LOGOUT, MAIN_EXIT
+	CALCULATE_GPA = 1, EVALUATE_LECTURE, MANAGE_SCHEDULE, CHANGE_PASSWD, LOGOUT, MAIN_EXIT
 };
 
 int initial_UI();
 int main_UI();
 int check_valid_input(char* input, int total_num);
 
+char *lb = "\n";
+
 int main() {
-	int choice;
+	int choice, check;
 
 	choice = initial_UI();
 	switch (choice) {
@@ -36,22 +38,26 @@ int main() {
 		case INITIAL_EXIT:
 			break;
 	}
-
-	choice = main_UI();
-	switch (choice) {
-		case CALCULATE_GPA:
-			break;
-		case EVALUATE_LECTURE:
-			break;
-		case MANAGE_SCHEDULE:
-			break;
-		case CHANGE_PASSWD:
-			break;
-		case LOGOUT:
-			break;
-		case MAIN_EXIT:
-			break;
+	
+	while (1) {
+		choice = main_UI();
+		switch (choice) {
+			case CALCULATE_GPA:
+				break;
+			case EVALUATE_LECTURE:
+				break;
+			case MANAGE_SCHEDULE:
+				break;
+			case CHANGE_PASSWD:
+				break;
+			case LOGOUT:
+				break;
+			case MAIN_EXIT:
+				break;
+		}
 	}
+
+
 
 	return 0;
 }
@@ -74,6 +80,7 @@ int initial_UI() {
 		input[strlen(input) - 1] = '\0';
 		if (check_valid_input(input, 4) == FALSE)
 			continue;
+		puts("");
 		
 		return input[0] - '0';
 	}
@@ -101,6 +108,7 @@ int main_UI() {
 		input[strlen(input) - 1] = '\0';
 		if (check_valid_input(input, 6) == FALSE)
 			continue;
+		puts("");
 		
 		return input[0] - '0';
 	}
@@ -108,8 +116,10 @@ int main_UI() {
 
 int check_valid_input(char* input, int total_num) {
 	if (strlen(input) != 1 || (input[0] - '0') < 1 || (input[0] - '0') > total_num) {
+		puts("");
 		printf("잘못된 입력입니다.\n");
 		printf("다시 입력해주세요.\n");
+		puts("");
 		return FALSE;
 	}
 	return TRUE;
