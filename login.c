@@ -8,7 +8,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <termios.h>
-#include "sugang_doumi.h" // FOLDER_PERMISSION, FILE_PERMMISION 포함
+#include "sugang_doumi.h" // FOLDER_PERMISSION, FILE_PERMMISION, hoem_path 포함
 
 char id[300];
 
@@ -29,13 +29,11 @@ int login(){
 	scanf("%s", login_id);
 	getchar();
 
-	char newpath[300];
-	strcat(newpath, login_id);
-
-	if(chdir(newpath) == -1){
+	if(chdir(login_id) == -1){
 		printf("존재하지 않는 ID(학번)입니다.\n");
 	        printf("3초 후 메뉴로 돌아갑니다.\n");
        		sleep(3);
+			chdir(home_path);
 		return -1;		
 	}
 	else{
@@ -71,10 +69,13 @@ label:
 				getchar();
 
 				switch(ans){
-					case 'Y' : return -1;
-					case 'y' : return -1;
-						case 'N' : goto label;
-					case 'n' : goto label;
+					case 'Y' : 
+					case 'y' :
+						chdir(home_path);
+						return -1;
+					case 'N' : 
+					case 'n' :
+						goto label;
 					default: break;	   
 				}
 			}
@@ -104,6 +105,7 @@ int sign_up(){
 		printf("이미 존재하는 ID입니다.\n");
 		printf("3초 후 메뉴로 돌아갑니다.\n");
 		sleep(3);
+		chdir(home_path);
 		return -1;
 	}
 	else
@@ -140,6 +142,7 @@ int sign_up(){
 	
 	puts("");
 	printf("회원가입이 완료되었습니다. 3초 후 메뉴로 돌아갑니다.\n");
+	chdir(home_path);
 	sleep(3);
 
 	close(passwd_fd);

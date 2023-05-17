@@ -6,3 +6,5 @@
 enum boolean {
 	FALSE, TRUE
 };
+
+extern char home_path[INPUT_SIZE];

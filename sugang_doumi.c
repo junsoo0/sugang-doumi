@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include "sugang_doumi.h"
 
 enum initial_choice {
@@ -17,10 +18,13 @@ int login();
 int sign_up();
 int find_passwd();
 int manage_schedule();
+char home_path[INPUT_SIZE];
 
 int main() {
 	int choice;
 	int check = -1;
+
+	getcwd(home_path, INPUT_SIZE);
 
 	while (check == -1) {
 		choice = initial_UI();
