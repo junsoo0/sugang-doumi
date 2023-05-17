@@ -18,26 +18,32 @@ enum main_choice {
 int initial_UI();
 int main_UI();
 int check_valid_input(char* input, int total_num);
+int login();
+int sign_up();
+int find_passwd();
 int manage_schedule();
 
 char *lb = "\n";
 
 int main() {
-	int choice, check;
+	int choice;
+	int check = -1;
 
-	choice = initial_UI();
-	switch (choice) {
-		case LOGIN:
-			/*
-			   로그인
-			*/
-			break;
-		case FIND_PASSWD:
-			break;
-		case SIGN_UP:
-			break;
-		case INITIAL_EXIT:
-			break;
+	while (check == -1) {
+		choice = initial_UI();
+		switch (choice) {
+			case LOGIN:
+				check = login();
+				break;
+			case FIND_PASSWD:
+				find_passwd();
+				break;
+			case SIGN_UP:
+				sign_up();
+				break;
+			case INITIAL_EXIT:
+				break;
+		}
 	}
 	
 	while (1) {

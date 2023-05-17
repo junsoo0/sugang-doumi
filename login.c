@@ -9,62 +9,7 @@
 #include <fcntl.h>
 #include <termios.h>
 
-int login();
-int sign_up();
-int passwd_find();
-
 char id[300];
-char home[300] = "/home/sudal/sp/tp";
-char account_path[300] = "/home/sudal/sp/tp/account";
-
-
-int main(){
-
-	int condition = 1;
-	int login_ans;
-	mkdir(home, 0777);
-	mkdir(account_path, 0777);
-	
-
-	
-	
-	while(condition){
-		puts("");
-		printf("1. 로그인   2. 회원가입   3. 비밀번호 찾기   4.종료\n");
-		printf("원하는 메뉴를 입력하세요(1~4): ");
-		scanf("%d", &login_ans);
-		getchar();
-
-		switch(login_ans){
-			case 1 : {
-			         int a = login();
-				 if(a != -1) condition = 0;
-				 break;
-			      	 	}
-			case 2 : {
-				 int b = sign_up();
-				 if(b != -1) condition = 0;
-			         break;	 
-					 }
-			case 3 : passwd_find();
-				 condition = 0;
-				 break;
-			case 4 : exit(0);
-			default : printf("잘못된 입력입니다.\n");
-		}
-		
-
-	}
-
-
-	chdir(home);
-	printf("end test\n");
-	
-
-
-
-}
-
 
 int login(){
 	char buf[300];
@@ -79,17 +24,12 @@ int login(){
 	}
 	wait(NULL);
 
-	chdir(home);
-
 	printf("ID를 입력하세요(학번): ");
 	scanf("%s", login_id);
 	getchar();
 
 	char newpath[300];
-	strcpy(newpath, account_path);
-	strcat(newpath, "/");
 	strcat(newpath, login_id);
-
 
 	if(chdir(newpath) == -1){
 		printf("존재하지 않는 ID(학번)입니다.\n");
@@ -106,7 +46,6 @@ label:
 		scanf("%s", passwd);
 		getchar();
 
-
 		info.c_lflag |= ECHO;
 		tcsetattr(0, TCSANOW, &info);
 		
@@ -115,8 +54,6 @@ label:
 		int passwd_fd = open("passwd", O_RDONLY);
 		read(passwd_fd, buf, 300);
 		close(passwd_fd);
-
-	
 	
 		if(strcmp(buf, passwd) == 0){
 			puts("");
@@ -124,33 +61,30 @@ label:
 			// 무한루프 깨고 로그인 성공 후 화면으로 이동
 			return 0;
 		}
-		else{
+		else {
 			while(1){
-			puts("");
-			printf("비밀번호가 일치하지 않습니다.\n");
-			printf("메뉴로 돌아가시겠습니까? (Y/N) : ");
-			ans = getchar();
-			getchar();
+				puts("");
+				printf("비밀번호가 일치하지 않습니다.\n");
+				printf("메뉴로 돌아가시겠습니까? (Y/N) : ");
+				ans = getchar();
+				getchar();
 
-			switch(ans){
-				case 'Y' : return -1;
-				case 'y' : return -1;
-			        case 'N' : goto label;
-				case 'n' : goto label;
-				default: break;	   
+				switch(ans){
+					case 'Y' : return -1;
+					case 'y' : return -1;
+						case 'N' : goto label;
+					case 'n' : goto label;
+					default: break;	   
+				}
 			}
-			}
-
 		}
 	}
-
 
 	return 0;
 }
 
 int sign_up(){
 	char sign_up_id[300];
-	char newpath[300];
 	char passwd[300];
 	char name[300];
 	char school[300];
@@ -162,24 +96,19 @@ int sign_up(){
 	}
 	wait(NULL);
 
-	chdir(home);
-
 	printf("회원가입 하실 ID를 입력하세요(학번): ");
 	scanf("%s", sign_up_id);
 	getchar();
-	strcpy(newpath, account_path);
-	strcat(newpath, "/");
-	strcat(newpath, sign_up_id);
-	if(chdir(newpath) != -1){
+	if(chdir(sign_up_id) != -1){
 		printf("이미 존재하는 ID입니다.\n");
 		printf("3초 후 메뉴로 돌아갑니다.\n");
 		sleep(3);
 		return -1;
 	}
 	else
-		mkdir(newpath, 0777);
+		mkdir(sign_up_id, 0777);
 
-	chdir(newpath);
+	chdir(sign_up_id);
 	puts("");
 	printf("비밀번호를 설정하세요: ");
 	info.c_lflag &= ~ECHO;
@@ -208,7 +137,6 @@ int sign_up(){
 	int school_fd = creat("school", 0777);
 	write(school_fd, school, strlen(school));
 	
-	
 	puts("");
 	printf("회원가입이 완료되었습니다. 3초 후 메뉴로 돌아갑니다.\n");
 	sleep(3);
@@ -220,8 +148,7 @@ int sign_up(){
 	return -1;
 }
 
-int passwd_find(){
+int find_passwd(){
 
 	;
 }
-
