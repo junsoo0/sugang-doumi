@@ -8,6 +8,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <termios.h>
+#include "sugang_doumi.h" // FOLDER_PERMISSION, FILE_PERMMISION 포함
 
 char id[300];
 
@@ -106,7 +107,7 @@ int sign_up(){
 		return -1;
 	}
 	else
-		mkdir(sign_up_id, 0777);
+		mkdir(sign_up_id, FOLDER_PERMISSION);
 
 	chdir(sign_up_id);
 	puts("");
@@ -119,7 +120,7 @@ int sign_up(){
 	info.c_lflag |= ECHO;
 	tcsetattr(0, TCSANOW, &info);
 
-	int passwd_fd = creat("passwd", 0777);
+	int passwd_fd = creat("passwd", FILE_PERMISSION);
 	write(passwd_fd, passwd, strlen(passwd));
 
 	puts("");
@@ -127,14 +128,14 @@ int sign_up(){
 	printf("당신의 이름을 입력하세요: ");
 	scanf("%s", name);
 	getchar();
-	int name_fd = creat("name", 0777);
+	int name_fd = creat("name", FILE_PERMISSION);
 	write(name_fd, name, strlen(name));
 
 	puts("");
 	printf("당신의 출신 초등학교를 입력하세요(비밀번호 찾기 용도): ");
 	scanf("%s", school);
 	getchar();
-	int school_fd = creat("school", 0777);
+	int school_fd = creat("school", FILE_PERMISSION);
 	write(school_fd, school, strlen(school));
 	
 	puts("");
