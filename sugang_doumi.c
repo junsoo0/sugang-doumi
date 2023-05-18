@@ -18,7 +18,9 @@ int login();
 int sign_up();
 int find_passwd();
 int manage_schedule();
+
 char home_path[INPUT_SIZE];
+char user_path[201];
 
 int main() {
 	int choice;

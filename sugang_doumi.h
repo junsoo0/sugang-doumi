@@ -8,3 +8,4 @@ enum boolean {
 };
 
 extern char home_path[INPUT_SIZE];
+extern char user_path[201];
