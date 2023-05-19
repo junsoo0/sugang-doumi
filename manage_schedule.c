@@ -57,8 +57,12 @@ void show_schedule(int opt) {
 	DIR *dp;
 	struct dirent *direntp;
 
-	if (opt > 0) // main에서 접속한 경우
-		chdir(schedule_path);
+	if (opt > 0) { // main에서 접속한 경우
+		if (chdir(schedule_path) == -1) {
+			mkdir("schedule", FOLDER_PERMISSION);
+			chdir(schedule_path);
+		}
+	}
 
 	dp = opendir(".");
 	while ((direntp = readdir(dp)) != NULL) {
@@ -168,10 +172,6 @@ int enter_schedule() {
 	puts("");
 	return FALSE;
 	*/
-}
-
-int print_schedule() {
-	
 }
 
 void wrong_date() {
