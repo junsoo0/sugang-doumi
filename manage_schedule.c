@@ -41,12 +41,15 @@ int manage_schedule() {
 				break;
 			case CHANGE_SCHEDULE:
 				break;
-			case SCHEDULE_BACK:
-				break;
 			case SCHEDULE_EXIT:
 				break;
 		}
+
+		if (input[0] - '0' == SCHEDULE_BACK)
+			break;
 	}
+	
+	chdir("..");
 }
 
 void show_schedule(int opt) {
