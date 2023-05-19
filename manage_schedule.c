@@ -8,11 +8,12 @@
 #include "sugang_doumi.h"
 
 enum schedule_choice {
-	ENTER_SCHEDULE = 1, CHANGE_SCHEDULE, SCHEDULE_BACK, SCHEDULE_EXIT
+	ENTER_SCHEDULE = 1, DELETE_SCHEDULE, SCHEDULE_BACK, SCHEDULE_EXIT
 };
 
 void show_schedule(int opt);
-int enter_schedule();
+void enter_schedule();
+void delete_schedule();
 void wrong_date();
 
 int manage_schedule() {
@@ -23,7 +24,7 @@ int manage_schedule() {
 		show_schedule(0);
 		printf("========================================\n");
 		printf("[1] 일정 등록\n");
-		printf("[2] 일정 수정\n");
+		printf("[2] 일정 삭제\n");
 		printf("[3] 뒤로가기\n");
 		printf("[4] 종료\n");
 		printf("----------------------------------------\n");
@@ -39,7 +40,8 @@ int manage_schedule() {
 			case ENTER_SCHEDULE:
 				enter_schedule();
 				break;
-			case CHANGE_SCHEDULE:
+			case DELETE_SCHEDULE:
+				delete_schedule();
 				break;
 			case SCHEDULE_EXIT:
 				break;
@@ -100,7 +102,7 @@ void show_schedule(int opt) {
 	}
 
 	if (i == 0) {
-		printf("----------------------------------------\n");
+		printf("========================================\n");
 		printf("등록된 일정이 없습니다.\n");
 	}
 
@@ -112,7 +114,7 @@ void show_schedule(int opt) {
 		chdir("..");
 }
 
-int enter_schedule() {
+void enter_schedule() {
 	int year, month, day;
 	char i = '1';
 	char fname[INPUT_SIZE], title[INPUT_SIZE], due_date[INPUT_SIZE], parse[INPUT_SIZE], contents[INPUT_SIZE];
@@ -178,14 +180,34 @@ int enter_schedule() {
 	puts("");
 	printf("일정 등록 성공\n");
 	puts("");
-	return TRUE;
+}
 
-	/*
-	puts("");
-	printf("일정 등록 실패\n");
-	puts("");
-	return FALSE;
-	*/
+void delete_schedule() {
+	int fcnt;
+	int j;
+	char input[INPUT_SIZE];
+	struct dirent **flist;
+
+	fcnt = scandir(".", &flist, NULL, alphasort);
+	while (1) {
+		printf("삭제할 일정 번호 입력: [1 - %d] ", fcnt - 2);
+		fgets(input, INPUT_SIZE, stdin);
+		input[strlen(input) - 1] = '\0';
+		if (check_valid_input(input, fcnt - 2) == FALSE)
+			continue;
+
+		if (remove(flist[atoi(input) + 1]->d_name) == 0)
+			printf("일정 삭제가 완료되었습니다.\n");
+		else
+			printf("일정 삭제 오류!\n");
+
+		break;
+	}
+
+	for (j = 0; j < fcnt; j++)
+		free(flist[j]);
+	free(flist);
+
 }
 
 void wrong_date() {
