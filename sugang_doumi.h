@@ -10,6 +10,7 @@ enum boolean {
 extern char home_path[INPUT_SIZE];
 extern char user_path[INPUT_SIZE];
 extern char schedule_path[INPUT_SIZE];
+extern char id[INPUT_SIZE];
 
 int check_valid_input(char* input, int total_num);
 void show_schedule(int opt);
