@@ -35,7 +35,7 @@ int manage_schedule() {
 		printf("[3] 뒤로가기\n");
 		printf("[4] 종료\n");
 		printf("----------------------------------------\n");
-		printf("선택: [1 - 5] ");
+		printf("선택: [1 - 4] ");
 
 		fgets(input, INPUT_SIZE, stdin);
 		input[strlen(input) - 1] = '\0';
