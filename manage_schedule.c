@@ -77,6 +77,9 @@ void show_schedule(int opt) {
 		if (flag == FALSE) {
 			if (opt > 0)
 				printf("마감일자순 %d개의 일정을 표시합니다.\n", opt);
+			else
+				printf("전체 일정을 표시합니다.\n");
+
 			printf("========================================\n");
 			flag = TRUE;
 		}
