@@ -72,6 +72,7 @@ void show_schedule(int opt) {
 		}
 	}
 
+	// 파일 목록 이름순으로 정렬해서 배열에 저장
 	fcnt = scandir(".", &flist, NULL, alphasort);
 
 	i = 0;
