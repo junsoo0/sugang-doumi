@@ -10,6 +10,10 @@
 #include <termios.h>
 #include "sugang_doumi.h" // FOLDER_PERMISSION, FILE_PERMMISION, home_path 포함
 
+char home_path[INPUT_SIZE];
+char user_path[INPUT_SIZE];
+char schedule_path[INPUT_SIZE];
+
 int login(){
 	char buf[INPUT_SIZE];
 	char passwd[INPUT_SIZE];
@@ -56,9 +60,13 @@ label:
 			puts("");
 			printf("로그인 성공.\n");
 			// 무한루프 깨고 로그인 성공 후 화면으로 이동
+
+			// 각 폴더에 접근하기 위한 경로 설정
 			strcpy(user_path, home_path);
 			strcat(user_path, "/");
 			strcat(user_path, login_id);
+			strcpy(schedule_path, user_path);
+			strcat(schedule_path, "/schedule");
 			return 0;
 		}
 		else {

@@ -19,9 +19,6 @@ int sign_up();
 int find_passwd();
 int manage_schedule();
 
-char home_path[INPUT_SIZE];
-char user_path[201];
-
 int main() {
 	int choice;
 	int check = -1;
@@ -95,10 +92,7 @@ int main_UI() {
 	char input[INPUT_SIZE];
 
 	while (1) {
-		printf("----------------------------------------\n");
-		/*
-		   오늘의 일정
-		*/
+		show_schedule(3);
 		printf("----------------------------------------\n");
 		printf("[1] 학점 계산\n");
 		printf("[2] 강의 평가\n");

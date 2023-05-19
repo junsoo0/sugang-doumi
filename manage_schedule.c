@@ -11,24 +11,16 @@ enum schedule_choice {
 	ENTER_SCHEDULE = 1, CHANGE_SCHEDULE, SCHEDULE_BACK, SCHEDULE_EXIT
 };
 
-void show_schedule();
+void show_schedule(int opt);
 int enter_schedule();
-
 void wrong_date();
-char schedule_path[210];
 
 int manage_schedule() {
 	char input[INPUT_SIZE];
 
-	strcpy(schedule_path, user_path);
-	strcat(schedule_path, "/schedule");
-	if (chdir(schedule_path) == -1) {
-		mkdir(schedule_path, FOLDER_PERMISSION);
-		chdir(schedule_path);
-	}
-
+	chdir(schedule_path);
 	while (1) {
-		show_schedule();
+		show_schedule(0);
 		printf("----------------------------------------\n");
 		printf("[1] 일정 등록\n");
 		printf("[2] 일정 수정\n");
@@ -57,17 +49,26 @@ int manage_schedule() {
 	}
 }
 
-void show_schedule() {
+void show_schedule(int opt) {
 	int i = 0;
+	int flag = FALSE;
 	char str[INPUT_SIZE];
 	FILE  *fp;
 	DIR *dp;
 	struct dirent *direntp;
 
+	if (opt > 0) // main에서 접속한 경우
+		chdir(schedule_path);
+
 	dp = opendir(".");
 	while ((direntp = readdir(dp)) != NULL) {
 		if (strcmp(direntp->d_name, ".") == 0 || strcmp(direntp->d_name, "..") == 0)
 			continue;
+
+		if (flag == FALSE && opt > 0) {
+			printf("마감일자순 %d개의 일정을 표시합니다.\n", opt);
+			flag = TRUE;
+		}
 
 		printf("----------------------------------------\n");
 		fp = fopen(direntp->d_name, "r");
@@ -78,6 +79,9 @@ void show_schedule() {
 		fgets(str, INPUT_SIZE, fp);
 		printf("내용: %s", str);
 		fclose(fp);
+
+		if (opt > 0 && opt == i)
+			break;
 	}
 	closedir(dp);
 
@@ -85,6 +89,9 @@ void show_schedule() {
 		printf("----------------------------------------\n");
 		printf("등록된 일정이 없습니다.\n");
 	}
+
+	if (opt > 0) // main에서 접속한 경우
+		chdir("..");
 }
 
 int enter_schedule() {
