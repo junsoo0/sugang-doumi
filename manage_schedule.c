@@ -4,6 +4,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <dirent.h>
 #include "sugang_doumi.h"
 
@@ -21,6 +22,8 @@ int manage_schedule() {
 
 	chdir(schedule_path);
 	while (1) {
+		clear_terminal();
+		printf("[일정 관리]\n");
 		show_schedule(0);
 		printf("========================================\n");
 		printf("[1] 일정 등록\n");

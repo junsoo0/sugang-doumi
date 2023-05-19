@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include "sugang_doumi.h"
 
 enum initial_choice {
@@ -18,14 +20,18 @@ int login();
 int sign_up();
 int find_passwd();
 int manage_schedule();
+int clear_terminal();
 
 int main() {
 	int choice;
 	int check = -1;
+	int pid;
 
 	getcwd(home_path, INPUT_SIZE);
 
 	while (check == -1) {
+		clear_terminal();
+		
 		choice = initial_UI();
 		switch (choice) {
 			case LOGIN:
@@ -43,6 +49,8 @@ int main() {
 	}
 	
 	while (1) {
+		clear_terminal();
+
 		choice = main_UI();
 		switch (choice) {
 			case CALCULATE_GPA:
@@ -91,6 +99,7 @@ int initial_UI() {
 int main_UI() {
 	char input[INPUT_SIZE];
 
+	printf("[메인 화면]\n");
 	while (1) {
 		show_schedule(3);
 		printf("========================================\n");
@@ -122,4 +131,14 @@ int check_valid_input(char* input, int total_num) {
 		return FALSE;
 	}
 	return TRUE;
+}
+
+int clear_terminal() {
+	int pid;
+
+	pid = fork();
+	if(pid == 0){
+		execlp("clear", "clear", NULL);
+	}
+	wait(NULL);
 }

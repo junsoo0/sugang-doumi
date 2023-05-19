@@ -22,20 +22,24 @@ int login(){
 	char ans;
 	struct termios info;
 	tcgetattr(0, &info);
+
+	/* UI 변경 중 -> sugang_doumi.h에 함수로 따로 분리 
 	int pid = fork();
 	if(pid == 0){
 		execlp("clear", "clear", NULL);
 	}
 	wait(NULL);
+	*/
 
+	printf("[로그인]\n");
 	printf("ID를 입력하세요(학번): ");
 	scanf("%s", login_id);
 	getchar();
 
 	if(chdir(login_id) == -1){
 		printf("존재하지 않는 ID(학번)입니다.\n");
-	        printf("3초 후 메뉴로 돌아갑니다.\n");
-       		sleep(3);
+	        printf("메뉴로 돌아갑니다.\n");
+       		sleep(1);
 			chdir(home_path);
 		return -1;		
 	}
@@ -60,6 +64,7 @@ label:
 		if(strcmp(buf, passwd) == 0){
 			puts("");
 			printf("로그인 성공.\n");
+			sleep(1);
 			// 무한루프 깨고 로그인 성공 후 화면으로 이동
 
 			strcpy(id, login_id);
@@ -104,19 +109,23 @@ int sign_up(){
 	char school[INPUT_SIZE];
 	struct termios info;
 	tcgetattr(0, &info);
+
+	/* UI 변경 중 -> sugang_doumi.h에 함수로 따로 분리
 	int pid = fork();
 	if(pid == 0){
 		execlp("clear", "clear", NULL);
 	}
 	wait(NULL);
+	*/
 
+	printf("[회원가입]\n");
 	printf("회원가입 하실 ID를 입력하세요(학번): ");
 	scanf("%s", sign_up_id);
 	getchar();
 	if(chdir(sign_up_id) != -1){
 		printf("이미 존재하는 ID입니다.\n");
-		printf("3초 후 메뉴로 돌아갑니다.\n");
-		sleep(3);
+		printf("메뉴로 돌아갑니다.\n");
+		sleep(1);
 		chdir(home_path);
 		return -1;
 	}
@@ -174,9 +183,9 @@ int sign_up(){
 	write(school_fd, school, strlen(school));
 	
 	puts("");
-	printf("회원가입이 완료되었습니다. 3초 후 메뉴로 돌아갑니다.\n");
+	printf("회원가입이 완료되었습니다.\n");
 	chdir(home_path);
-	sleep(3);
+	sleep(1);
 
 	close(passwd_fd);
 	close(name_fd);
@@ -190,21 +199,23 @@ int find_passwd(){
 	char school_name[INPUT_SIZE];
 	char school_buf[INPUT_SIZE];
 	char passwd_buf[INPUT_SIZE];
+	/* UI 변경 중 -> sugang_doumi.h에 함수로 따로 분리
 	int pid = fork();
 	if(pid == 0){
 		execlp("clear", "clear", NULL);
 	}
 	wait(NULL);
+	*/
 
-	printf("비밀번호 찾기 메뉴입니다.\n");
+	printf("[비밀번호 찾기]\n");
 	printf("ID를 입력하세요(학번): ");
        	scanf("%s", find_id);
        	getchar();
 	
 	if(chdir(find_id) == -1){
 		printf("존재하지 않는 ID입니다.\n");
-		printf("3초 후 메뉴로 돌아갑니다.\n");
-		sleep(3);
+		printf("메뉴로 돌아갑니다.\n");
+		sleep(1);
 		chdir(home_path);
 		return -1;
 	}
@@ -225,15 +236,15 @@ int find_passwd(){
 		read(passwd_fd, passwd_buf, INPUT_SIZE);
 		close(passwd_fd);
 		printf("비밀번호는 %s 입니다.\n", passwd_buf);
-		printf("3초 후 메뉴로 돌아갑니다.\n");
-		sleep(3);
+		printf("메뉴로 돌아갑니다.\n");
+		sleep(2);
 		chdir(home_path);
 		return -1;
 	}
 	else{
 		printf("입력하신 정보가 회원정보와 일치하지 않습니다.\n");
-		printf("3초 후 메뉴로 돌아갑니다.\n");
-		sleep(3);
+		printf("메뉴로 돌아갑니다.\n");
+		sleep(1);
 		chdir(home_path);
 		return -1;
 
