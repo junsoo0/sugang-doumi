@@ -7,23 +7,71 @@
 #include <dirent.h>
 #include "sugang_doumi.h"
 
+enum schedule_choice {
+	ENTER_SCHEDULE = 1, CHANGE_SCHEDULE, SCHEDULE_BACK, SCHEDULE_EXIT
+};
+
+void show_schedule();
+int enter_schedule();
+
 void wrong_date();
 char schedule_path[210];
 
 int manage_schedule() {
+	char input[INPUT_SIZE];
+
+	strcpy(schedule_path, user_path);
+	strcat(schedule_path, "/schedule");
+	if (chdir(schedule_path) == -1) {
+		mkdir(schedule_path, FOLDER_PERMISSION);
+		chdir(schedule_path);
+	}
+
+	while (1) {
+		show_schedule();
+		printf("----------------------------------------\n");
+		printf("[1] 일정 등록\n");
+		printf("[2] 일정 수정\n");
+		printf("[3] 뒤로가기\n");
+		printf("[4] 종료\n");
+		printf("----------------------------------------\n");
+		printf("선택: [1 - 5] ");
+
+		fgets(input, INPUT_SIZE, stdin);
+		input[strlen(input) - 1] = '\0';
+		if (check_valid_input(input, 5) == FALSE)
+			continue;
+		puts("");
+
+		switch (input[0] - '0') {
+			case ENTER_SCHEDULE:
+				enter_schedule();
+				break;
+			case CHANGE_SCHEDULE:
+				break;
+			case SCHEDULE_BACK:
+				break;
+			case SCHEDULE_EXIT:
+				break;
+		}
+	}
+}
+
+void show_schedule() {
+	DIR *dp;
+	struct dirent *direntp;
+
+
+}
+
+int enter_schedule() {
 	int year, month, day;
 	char i = '1';
 	char fname[INPUT_SIZE], title[INPUT_SIZE], due_date[INPUT_SIZE], parse[INPUT_SIZE], contents[INPUT_SIZE];
 	FILE *fp, *tfp;
 	DIR *dp;
 	struct dirent *direntp;
-	struct stat info;
 
-	sprintf(schedule_path, "%s/schedule", user_path);
-	if (chdir(schedule_path) == -1) {
-		mkdir(schedule_path, FOLDER_PERMISSION);
-		chdir(schedule_path);
-	}
 
 	printf("일정 이름: ");
 	fgets(title, INPUT_SIZE, stdin);

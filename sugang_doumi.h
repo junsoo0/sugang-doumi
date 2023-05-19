@@ -9,3 +9,5 @@ enum boolean {
 
 extern char home_path[INPUT_SIZE];
 extern char user_path[201];
+
+int check_valid_input(char* input, int total_num);

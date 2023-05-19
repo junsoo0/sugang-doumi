@@ -10,12 +10,10 @@
 #include <termios.h>
 #include "sugang_doumi.h" // FOLDER_PERMISSION, FILE_PERMMISION, home_path 포함
 
-char id[300];
-
 int login(){
-	char buf[300];
-	char passwd[300];
-	char login_id[300];
+	char buf[INPUT_SIZE];
+	char passwd[INPUT_SIZE];
+	char login_id[INPUT_SIZE];
 	char ans;
 	struct termios info;
 	tcgetattr(0, &info);
@@ -49,15 +47,18 @@ label:
 		tcsetattr(0, TCSANOW, &info);
 		
 		// 프로그램 재실행시 buf가 초기화가 안됨 그래서 초기화 해줘야함
-		for(int i = 0; i < 300; i++) buf[i] = '\0';
+		for(int i = 0; i < INPUT_SIZE; i++) buf[i] = '\0';
 		int passwd_fd = open("passwd", O_RDONLY);
-		read(passwd_fd, buf, 300);
+		read(passwd_fd, buf, INPUT_SIZE);
 		close(passwd_fd);
 	
 		if(strcmp(buf, passwd) == 0){
 			puts("");
 			printf("로그인 성공.\n");
 			// 무한루프 깨고 로그인 성공 후 화면으로 이동
+			strcpy(user_path, home_path);
+			strcat(user_path, "/");
+			strcat(user_path, login_id);
 			return 0;
 		}
 		else {
@@ -86,11 +87,11 @@ label:
 }
 
 int sign_up(){
-	char sign_up_id[300];
-	char passwd1[300];
-	char passwd2[300];
-	char name[300];
-	char school[300];
+	char sign_up_id[INPUT_SIZE];
+	char passwd1[INPUT_SIZE];
+	char passwd2[INPUT_SIZE];
+	char name[INPUT_SIZE];
+	char school[INPUT_SIZE];
 	struct termios info;
 	tcgetattr(0, &info);
 	int pid = fork();
@@ -175,10 +176,10 @@ int sign_up(){
 }
 
 int find_passwd(){
-	char find_id[300];
-	char school_name[300];
-	char school_buf[300];
-	char passwd_buf[300];
+	char find_id[INPUT_SIZE];
+	char school_name[INPUT_SIZE];
+	char school_buf[INPUT_SIZE];
+	char passwd_buf[INPUT_SIZE];
 	int pid = fork();
 	if(pid == 0){
 		execlp("clear", "clear", NULL);
@@ -203,15 +204,15 @@ int find_passwd(){
 	getchar();
 
 	
-	for(int i = 0; i < 300; i++) school_buf[i] = '\0';
+	for(int i = 0; i < INPUT_SIZE; i++) school_buf[i] = '\0';
 	int school_fd = open("school", O_RDONLY);
-	read(school_fd, school_buf, 300);
+	read(school_fd, school_buf, INPUT_SIZE);
 	close(school_fd);
 
 	if(strcmp(school_name, school_buf) == 0){
-		for(int j = 0; j < 300; j++) passwd_buf[j] = '\0';
+		for(int j = 0; j < INPUT_SIZE; j++) passwd_buf[j] = '\0';
 		int passwd_fd = open("passwd", O_RDONLY);
-		read(passwd_fd, passwd_buf, 300);
+		read(passwd_fd, passwd_buf, INPUT_SIZE);
 		close(passwd_fd);
 		printf("비밀번호는 %s 입니다.\n", passwd_buf);
 		printf("3초 후 메뉴로 돌아갑니다.\n");
