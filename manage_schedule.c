@@ -58,10 +58,33 @@ int manage_schedule() {
 }
 
 void show_schedule() {
+	int i = 0;
+	char str[INPUT_SIZE];
+	FILE  *fp;
 	DIR *dp;
 	struct dirent *direntp;
 
+	dp = opendir(".");
+	while ((direntp = readdir(dp)) != NULL) {
+		if (strcmp(direntp->d_name, ".") == 0 || strcmp(direntp->d_name, "..") == 0)
+			continue;
 
+		printf("----------------------------------------\n");
+		fp = fopen(direntp->d_name, "r");
+		fgets(str, INPUT_SIZE, fp);
+		printf("(%d) %s", ++i, str);
+		fgets(str, INPUT_SIZE, fp);
+		printf("날짜: %s", str);
+		fgets(str, INPUT_SIZE, fp);
+		printf("내용: %s", str);
+		fclose(fp);
+	}
+	closedir(dp);
+
+	if (i == 0) {
+		printf("----------------------------------------\n");
+		printf("등록된 일정이 없습니다.\n");
+	}
 }
 
 int enter_schedule() {
@@ -119,6 +142,7 @@ int enter_schedule() {
 			fname[strlen(fname) - 1] = ++i;
 		}
 	}
+	closedir(dp);
 
 	fp = fopen(fname, "w");
 	fwrite(title, strlen(title), sizeof(char), fp);
