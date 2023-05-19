@@ -50,12 +50,12 @@ int manage_schedule() {
 }
 
 void show_schedule(int opt) {
-	int i = 0;
+	int fcnt;
+	int i, j;
 	int flag = FALSE;
 	char str[INPUT_SIZE];
 	FILE  *fp;
-	DIR *dp;
-	struct dirent *direntp;
+	struct dirent **flist;
 
 	if (opt > 0) { // main에서 접속한 경우
 		if (chdir(schedule_path) == -1) {
@@ -64,9 +64,11 @@ void show_schedule(int opt) {
 		}
 	}
 
-	dp = opendir(".");
-	while ((direntp = readdir(dp)) != NULL) {
-		if (strcmp(direntp->d_name, ".") == 0 || strcmp(direntp->d_name, "..") == 0)
+	fcnt = scandir(".", &flist, NULL, alphasort);
+
+	i = 0;
+	for (j = 0; j < fcnt; j++) {
+		if (strcmp(flist[j]->d_name, ".") == 0 || strcmp(flist[j]->d_name, "..") == 0)
 			continue;
 
 		if (flag == FALSE && opt > 0) {
@@ -75,7 +77,7 @@ void show_schedule(int opt) {
 		}
 
 		printf("----------------------------------------\n");
-		fp = fopen(direntp->d_name, "r");
+		fp = fopen(flist[j]->d_name, "r");
 		fgets(str, INPUT_SIZE, fp);
 		printf("(%d) %s", ++i, str);
 		fgets(str, INPUT_SIZE, fp);
@@ -87,12 +89,15 @@ void show_schedule(int opt) {
 		if (opt > 0 && opt == i)
 			break;
 	}
-	closedir(dp);
 
 	if (i == 0) {
 		printf("----------------------------------------\n");
 		printf("등록된 일정이 없습니다.\n");
 	}
+
+	for (j = 0; j < fcnt; j++)
+		free(flist[j]);
+	free(flist);
 
 	if (opt > 0) // main에서 접속한 경우
 		chdir("..");
