@@ -21,7 +21,7 @@ int manage_schedule() {
 	chdir(schedule_path);
 	while (1) {
 		show_schedule(0);
-		printf("----------------------------------------\n");
+		printf("========================================\n");
 		printf("[1] 일정 등록\n");
 		printf("[2] 일정 수정\n");
 		printf("[3] 뒤로가기\n");
@@ -74,12 +74,15 @@ void show_schedule(int opt) {
 		if (strcmp(flist[j]->d_name, ".") == 0 || strcmp(flist[j]->d_name, "..") == 0)
 			continue;
 
-		if (flag == FALSE && opt > 0) {
-			printf("마감일자순 %d개의 일정을 표시합니다.\n", opt);
+		if (flag == FALSE) {
+			if (opt > 0)
+				printf("마감일자순 %d개의 일정을 표시합니다.\n", opt);
+			printf("========================================\n");
 			flag = TRUE;
 		}
+		else
+			puts("");
 
-		printf("----------------------------------------\n");
 		fp = fopen(flist[j]->d_name, "r");
 		fgets(str, INPUT_SIZE, fp);
 		printf("(%d) %s", ++i, str);
