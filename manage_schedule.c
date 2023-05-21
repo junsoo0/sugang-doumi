@@ -194,6 +194,11 @@ void delete_schedule() {
 
 	fcnt = scandir(".", &flist, NULL, alphasort);
 	while (1) {
+		if (fcnt - 2 == 0) {
+			printf("등록된 일정이 없습니다.\n");
+			sleep(1);
+			break;
+		}
 		printf("삭제할 일정 번호 입력: [1 - %d] ", fcnt - 2);
 		fgets(input, INPUT_SIZE, stdin);
 		input[strlen(input) - 1] = '\0';
@@ -204,6 +209,7 @@ void delete_schedule() {
 			printf("일정 삭제가 완료되었습니다.\n");
 		else
 			printf("일정 삭제 오류!\n");
+		sleep(1);
 
 		break;
 	}
