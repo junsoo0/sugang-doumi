@@ -11,11 +11,6 @@
 #include <dirent.h>
 #include "sugang_doumi.h" // FOLDER_PERMISSION, FILE_PERMMISION, home_path 포함
 
-char home_path[INPUT_SIZE];
-char user_path[INPUT_SIZE];
-char credit_path[INPUT_SIZE];
-char id[INPUT_SIZE];
-
 struct credit {
 	char lecture[INPUT_SIZE];
 	char lecture_type[INPUT_SIZE];
