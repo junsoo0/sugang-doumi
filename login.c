@@ -13,6 +13,7 @@
 char home_path[INPUT_SIZE];
 char user_path[INPUT_SIZE];
 char schedule_path[INPUT_SIZE];
+char credit_path[INPUT_SIZE];
 char id[INPUT_SIZE];
 
 int login(){
@@ -74,6 +75,9 @@ label:
 			strcat(user_path, login_id);
 			strcpy(schedule_path, user_path);
 			strcat(schedule_path, "/schedule");
+			strcpy(credit_path, user_path);
+			strcat(credit_path, "/credit");
+			mkdir(credit_path, FOLDER_PERMISSION);
 			return 0;
 		}
 		else {
@@ -168,7 +172,6 @@ int sign_up(){
 
 
 	puts("");
-	puts("");
 	printf("당신의 이름을 입력하세요: ");
 	scanf("%s", name);
 	getchar();
@@ -247,6 +250,100 @@ int find_passwd(){
 		sleep(1);
 		chdir(home_path);
 		return -1;
+
+	}
+
+}
+
+
+
+
+int change_passwd(){
+	char buf[INPUT_SIZE];
+	char old_passwd[INPUT_SIZE];
+	char new_passwd1[INPUT_SIZE];
+	char new_passwd2[INPUT_SIZE];
+	struct termios info;
+	tcgetattr(0, &info);
+	
+	for(int i = 0; i < INPUT_SIZE; i++) buf[i] = '\0';
+	int passwd_fd = open("passwd", O_RDONLY);
+	read(passwd_fd, buf, INPUT_SIZE);
+	close(passwd_fd);
+	
+	puts("");
+	printf("현재 비밀번호를 입력하세요: ");
+	info.c_lflag &= ~ECHO;
+	tcsetattr(0, TCSANOW, &info);
+	scanf("%s", old_passwd);
+	getchar();
+
+	if(strcmp(old_passwd, buf) == 0){
+		puts("");
+		printf("변경하실 비밀번호를 입력하세요: ");
+		scanf("%s", new_passwd1);
+		getchar();
+		
+		puts("");
+		printf("변경하실 비밀번호를 다시 입력하세요: ");
+		scanf("%s", new_passwd2);
+		getchar();
+		
+		info.c_lflag |= ECHO;
+		tcsetattr(0, TCSANOW, &info);
+		
+		if(strcmp(new_passwd1, new_passwd2) == 0){
+			int new_passwd_fd = open("passwd", O_WRONLY | O_TRUNC);
+			write(new_passwd_fd, new_passwd1, strlen(new_passwd1));
+			close(new_passwd_fd);
+			puts("");
+			printf("비밀번호가 변경되었습니다.\n");
+			sleep(2);
+			chdir(home_path);
+			return 1;
+		}
+		else{
+			puts("");
+			printf("두 비밀번호가 일치하지 않습니다.\n");
+			sleep(2);
+			chdir(home_path);
+			return 0;
+		}
+
+	}
+	else{
+		puts("");
+		printf("비밀번호가 일치하지 않습니다.\n");
+		info.c_lflag |= ECHO;
+		tcsetattr(0, TCSANOW, &info);
+		sleep(2);
+		return 0;
+	}
+
+	
+}
+
+int logout(){
+	char ans;
+
+	while(1){
+	puts("");
+ 	printf("로그아웃 하시겠습니까? (Y/N): ");	
+	ans = getchar();
+	getchar();
+
+	switch(ans){
+		case 'Y' :
+		case 'y' :
+			chdir(home_path);
+			for(int i = 0; i < INPUT_SIZE; i++)
+				id[i] = '\0';
+			return 1;
+		case 'N' :
+		case 'n' :	return 0;
+		default : break;
+
+	}
 
 	}
 
