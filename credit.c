@@ -25,8 +25,8 @@ void print_credit_and_grade();
 float grade_to_float(char*);
 
 int credit_add(){
-	clear_terminal();
-	
+	// clear_terminal();
+
 	int fd;
 	FILE* fp;
 	struct credit temp;
@@ -113,7 +113,7 @@ int credit_add(){
 }
 
 int credit_remove(){
-	clear_terminal();
+	//clear_terminal();
 	
 	DIR *dir_ptr;
 	struct dirent *direntp;
