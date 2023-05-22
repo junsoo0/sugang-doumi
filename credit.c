@@ -27,9 +27,6 @@ float grade_to_float(char*);
 int credit_add(){
 	clear_terminal();
 	
-	DIR *dir_ptr;
-	struct dirent *direntp;
-	int list_num = 0;
 	int fd;
 	FILE* fp;
 	struct credit temp;
@@ -106,6 +103,9 @@ int credit_add(){
 	// 구조체에 담긴 것을 파일포인터로 출력
 	fprintf(fp, "%s %s %d %s", temp.lecture, temp.lecture_type,
 			                          temp.credit, temp.grade);
+
+	printf("학점이 등록되었습니다.\n");
+	sleep(1);
 	
 	chdir(home_path);
 	fclose(fp);
@@ -117,7 +117,6 @@ int credit_remove(){
 	
 	DIR *dir_ptr;
 	struct dirent *direntp;
-	int fd;
 	char remove_lecture[INPUT_SIZE];
 	
 	printf("삭제할 과목명을 입력하세요: ");
@@ -190,7 +189,7 @@ int credit_list(){
 	puts("");	
 	puts("");
 	printf("메뉴로 돌아가려면 엔터를 두번 누르세요\n");
-	char c = getchar();
+	getchar();
 	getchar();
 	chdir(home_path);
 	return 0;
@@ -278,5 +277,6 @@ float grade_to_float(char* input){
 	else if(strcmp(input, "D0") == 0) return 1.0;
 	else if(strcmp(input, "D-") == 0) return 0.7;
 	else if(strcmp(input, "F") == 0) return 0.0;
+	else return -1.0;
 }
 

@@ -55,6 +55,8 @@ int manage_schedule() {
 	}
 	
 	chdir("..");
+
+	return 0;
 }
 
 void show_schedule(int opt) {
@@ -122,7 +124,7 @@ void enter_schedule() {
 	int year, month, day;
 	char i = '1';
 	char fname[INPUT_SIZE], title[INPUT_SIZE], due_date[INPUT_SIZE], parse[INPUT_SIZE], contents[INPUT_SIZE];
-	FILE *fp, *tfp;
+	FILE *fp;
 	DIR *dp;
 	struct dirent *direntp;
 
@@ -181,9 +183,8 @@ void enter_schedule() {
 	fwrite(contents, strlen(contents), sizeof(char), fp);
 	fclose(fp);
 
-	puts("");
-	printf("일정 등록 성공\n");
-	puts("");
+	printf("일정이 등록되었습니다.\n");
+	sleep(1);
 }
 
 void delete_schedule() {
@@ -206,7 +207,7 @@ void delete_schedule() {
 			continue;
 
 		if (remove(flist[atoi(input) + 1]->d_name) == 0)
-			printf("일정 삭제가 완료되었습니다.\n");
+			printf("일정이 삭제되었습니다.\n");
 		else
 			printf("일정 삭제 오류!\n");
 		sleep(1);

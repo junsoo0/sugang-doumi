@@ -35,10 +35,8 @@ int clear_terminal();
 int main() {
 	int choice;
 	int check = -1;
-	int pid;
 
 	getcwd(home_path, INPUT_SIZE);
-
 
 	while (check == -1) {
 initial:	
@@ -200,4 +198,6 @@ int clear_terminal() {
 		execlp("clear", "clear", NULL);
 	}
 	wait(NULL);
+
+	return 0;
 }
