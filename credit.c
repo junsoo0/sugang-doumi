@@ -49,7 +49,6 @@ int credit_add(){
 	
 	// 전공or교양 입력받기
 	while(type_check){
-		puts("");
 		printf("과목구분을 입력하세요 (전공/교양): ");
 		scanf("%s", temp_type);
 		getchar();
@@ -67,7 +66,6 @@ int credit_add(){
 	
 	// 이수학점 입력받기
 	while(credit_check){
-		puts("");
 		printf("이수학점을 입력하세요 (1~9) : ");
 		scanf("%d", &temp_credit);
 		getchar();
@@ -84,7 +82,6 @@ int credit_add(){
 	
 	// 성적 입력받기
 	while(grade_check){
-		puts("");
 		printf("성적을 입력하세요 (F ~ A+) : ");
 		scanf("%s", temp_grade);
 		getchar();
@@ -151,6 +148,7 @@ int credit_list(){
 	FILE* fp;
 	struct credit temp;
 	
+	printf("[학점 목록]\n");
 	printf("==============================================\n");
 	chdir(credit_path);
 	dir_ptr = opendir(credit_path);
@@ -177,7 +175,8 @@ int credit_list(){
 	
 	if(list_num == 0){
 		printf("등록된 학점 목록이 없습니다.\n");
-		sleep(2);
+		printf("--------------------------------------------\n");
+		puts("");
 		chdir(home_path);
 		return 0;
 	}
@@ -185,12 +184,6 @@ int credit_list(){
 		
 	// 총 학점, 교양학점, 전공학점, 성적 출력
 	print_credit_and_grade();
-	
-	puts("");	
-	puts("");
-	printf("메뉴로 돌아가려면 엔터를 두번 누르세요\n");
-	getchar();
-	getchar();
 	chdir(home_path);
 	return 0;
 }
@@ -256,7 +249,8 @@ void print_credit_and_grade(){
 	printf("==============================================\n");
 	printf("총 이수학점: %d학점 / 전공: %d학점 / 교양: %d학점\n", total_credit, major, culture);
 	printf("평균평점: %.2f\n", avg_grade);
-	printf("==============================================\n");
+	printf("----------------------------------------------\n");
+	puts("");
 	
 }
 

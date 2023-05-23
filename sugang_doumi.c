@@ -3,6 +3,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <termios.h>
 #include "sugang_doumi.h"
 
 enum initial_choice {
@@ -14,7 +17,7 @@ enum main_choice {
 };
 
 enum credit_choice {
-	CREDIT_ADD = 1, CREDIT_REMOVE, CREDIT_LIST, CREDIT_EXIT
+	CREDIT_ADD = 1, CREDIT_REMOVE, CREDIT_EXIT
 };
 
 int initial_UI();
@@ -31,10 +34,15 @@ int credit_add();
 int credit_remove();
 int credit_list();
 int clear_terminal();
+void inthandler(int s);
+void quithandler(int s);
 
 int main() {
 	int choice;
 	int check = -1;
+	
+	signal(SIGINT, inthandler);
+	signal(SIGQUIT, quithandler);
 
 	getcwd(home_path, INPUT_SIZE);
 
@@ -66,6 +74,8 @@ initial:
 			case CALCULATE_GPA:{
 				int credit_condition = 1;
 				while(credit_condition){
+				clear_terminal();
+				credit_list();
 				int credit_choice = credit_UI();
 				switch(credit_choice) {
 					case CREDIT_ADD:
@@ -73,9 +83,6 @@ initial:
 							break;
 					case CREDIT_REMOVE:
 							credit_remove();
-							break;
-					case CREDIT_LIST:
-							credit_list();
 							break;
 					case CREDIT_EXIT:
 							credit_condition = 0;
@@ -155,23 +162,20 @@ int main_UI() {
 }
 
 int credit_UI() {
-	clear_terminal();
-	
 	char input[INPUT_SIZE];
 
 	printf("[학점 계산 메뉴]\n");
 	while (1) {
-		printf("========================================\n");
+		printf("==============================================\n");
 		printf("[1] 학점 등록\n");
 		printf("[2] 학점 삭제\n");
-		printf("[3] 학점 조회\n");
-		printf("[4] 돌아가기\n");
-		printf("----------------------------------------\n");
-		printf("선택: [1 - 4] ");
+		printf("[3] 돌아가기\n");
+		printf("----------------------------------------------\n");
+		printf("선택: [1 - 3] ");
 
 		fgets(input, INPUT_SIZE, stdin);
 		input[strlen(input) - 1] = '\0';
-		if (check_valid_input(input, 4) == FALSE)
+		if (check_valid_input(input, 3) == FALSE)
 			continue;
 		puts("");
 		
@@ -201,3 +205,28 @@ int clear_terminal() {
 
 	return 0;
 }
+
+void inthandler(int s){
+	puts("");
+	puts("");
+	printf("Ctrl + C 입력은 허용되지 않습니다.\n");
+	printf("종료를 원하시면 Ctrl + \\ 를 입력하세요.\n");	
+	sleep(3);
+}
+
+void quithandler(int s){
+	char ans;
+	int check = 1;
+	struct termios info;
+	tcgetattr(0, &info);
+	
+	puts("");
+	puts("");
+	printf("프로그램을 종료합니다.\n");
+	info.c_lflag |= ECHO;
+	tcsetattr(0, TCSANOW, &info);
+	exit(0);
+	
+}
+
+
