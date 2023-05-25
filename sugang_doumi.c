@@ -67,6 +67,7 @@ initial:
 				break;
 		}
 	}
+	check = -1;
 	
 	while (1) {
 		clear_terminal();

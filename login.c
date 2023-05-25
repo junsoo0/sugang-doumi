@@ -46,7 +46,6 @@ int login(){
 	}
 	else{
 label:
-		puts("");
 		printf("비밀번호를 입력하세요: ");
 		info.c_lflag &= ~ECHO;
 		tcsetattr(0, TCSANOW, &info);
@@ -82,7 +81,6 @@ label:
 		}
 		else {
 			while(1){
-				puts("");
 				printf("비밀번호가 일치하지 않습니다.\n");
 				printf("메뉴로 돌아가시겠습니까? (Y/N) : ");
 				ans = getchar();
@@ -142,18 +140,17 @@ int sign_up(){
 	int passwd_check = 1;
 	int passwd_fd;
 	while(passwd_check){
-		puts("");
 		printf("비밀번호를 설정하세요: ");
 		scanf("%s", passwd1);
 		getchar();
-	
 		puts("");
+	
 		printf("비밀번호를 다시 입력하세요: ");
 		scanf("%s", passwd2);
 		getchar();
+		puts("");
 	
 		if(strcmp(passwd1, passwd2) == 0){
-			puts("");
 			printf("비밀번호가 정상적으로 설정되었습니다.\n");
 		
 			passwd_fd = creat("passwd", FILE_PERMISSION);
@@ -162,7 +159,6 @@ int sign_up(){
 			passwd_check = 0;
 		}
 		else{
-			puts("");
 			printf("두 비밀번호가 일치하지 않습니다. \n");
 		}
 	}
@@ -171,21 +167,18 @@ int sign_up(){
 	tcsetattr(0, TCSANOW, &info);
 
 
-	puts("");
 	printf("당신의 이름을 입력하세요: ");
 	scanf("%s", name);
 	getchar();
 	int name_fd = creat("name", FILE_PERMISSION);
 	write(name_fd, name, strlen(name));
 
-	puts("");
 	printf("당신의 출신 초등학교를 입력하세요(비밀번호 찾기 용도): ");
 	scanf("%s", school);
 	getchar();
 	int school_fd = creat("school", FILE_PERMISSION);
 	write(school_fd, school, strlen(school));
 	
-	puts("");
 	printf("회원가입이 완료되었습니다.\n");
 	chdir(home_path);
 	sleep(1);
@@ -271,7 +264,6 @@ int change_passwd(){
 	read(passwd_fd, buf, INPUT_SIZE);
 	close(passwd_fd);
 	
-	puts("");
 	printf("현재 비밀번호를 입력하세요: ");
 	info.c_lflag &= ~ECHO;
 	tcsetattr(0, TCSANOW, &info);
@@ -279,12 +271,10 @@ int change_passwd(){
 	getchar();
 
 	if(strcmp(old_passwd, buf) == 0){
-		puts("");
 		printf("변경하실 비밀번호를 입력하세요: ");
 		scanf("%s", new_passwd1);
 		getchar();
 		
-		puts("");
 		printf("변경하실 비밀번호를 다시 입력하세요: ");
 		scanf("%s", new_passwd2);
 		getchar();
@@ -296,14 +286,12 @@ int change_passwd(){
 			int new_passwd_fd = open("passwd", O_WRONLY | O_TRUNC);
 			write(new_passwd_fd, new_passwd1, strlen(new_passwd1));
 			close(new_passwd_fd);
-			puts("");
 			printf("비밀번호가 변경되었습니다.\n");
 			sleep(2);
 			chdir(home_path);
 			return 1;
 		}
 		else{
-			puts("");
 			printf("두 비밀번호가 일치하지 않습니다.\n");
 			sleep(2);
 			chdir(home_path);
@@ -312,7 +300,6 @@ int change_passwd(){
 
 	}
 	else{
-		puts("");
 		printf("비밀번호가 일치하지 않습니다.\n");
 		info.c_lflag |= ECHO;
 		tcsetattr(0, TCSANOW, &info);
@@ -327,7 +314,6 @@ int logout(){
 	char ans;
 
 	while(1){
-	puts("");
  	printf("로그아웃 하시겠습니까? (Y/N): ");	
 	ans = getchar();
 	getchar();
