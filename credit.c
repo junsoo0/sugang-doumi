@@ -148,7 +148,9 @@ int credit_list(){
 	FILE* fp;
 	struct credit temp;
 	
+	printf("\x1b[32m");
 	printf("[학점 목록]\n");
+	printf("\x1b[0m");
 	printf("==============================================\n");
 	chdir(credit_path);
 	dir_ptr = opendir(credit_path);

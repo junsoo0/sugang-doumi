@@ -116,7 +116,9 @@ int initial_UI() {
 
 	while (1) {
 		printf("========================================\n");
+		puts("");
 		printf("               수강 도우미              \n");
+		puts("");
 		printf("========================================\n");
 		printf("[1] 로그인\n");
 		printf("[2] 비밀번호 찾기\n");
@@ -138,7 +140,9 @@ int initial_UI() {
 int main_UI() {
 	char input[INPUT_SIZE];
 
+	printf("\x1b[32m");
 	printf("[메인 화면]\n");
+	printf("\x1b[0m");
 	while (1) {
 		show_schedule(3);
 		printf("========================================\n");
@@ -164,7 +168,9 @@ int main_UI() {
 int credit_UI() {
 	char input[INPUT_SIZE];
 
+	printf("\x1b[32m");
 	printf("[학점 계산 메뉴]\n");
+	printf("\x1b[0m");
 	while (1) {
 		printf("==============================================\n");
 		printf("[1] 학점 등록\n");

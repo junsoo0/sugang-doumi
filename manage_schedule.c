@@ -23,7 +23,9 @@ int manage_schedule() {
 	chdir(schedule_path);
 	while (1) {
 		clear_terminal();
+		printf("\x1b[32m");
 		printf("[일정 관리]\n");
+		printf("\x1b[0m");
 		show_schedule(0);
 		printf("========================================\n");
 		printf("[1] 일정 등록\n");
@@ -106,7 +108,7 @@ void show_schedule(int opt) {
 		if (opt > 0 && opt == i)
 			break;
 	}
-
+	
 	if (i == 0) {
 		printf("========================================\n");
 		printf("등록된 일정이 없습니다.\n");

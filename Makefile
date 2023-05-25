@@ -6,7 +6,7 @@ sugang_doumi: sugang_doumi.o login.o credit.o manage_schedule.o
 	gcc -o sugang_doumi sugang_doumi.o login.o credit.o manage_schedule.o 
 
 sugang_doumi.o: sugang_doumi.c sugang_doumi.h
-	gcc -Wall -g -c sugang_doumi.c 
+	gcc -Wall -g -c sugang_doumi.c
 
 login.o: login.c sugang_doumi.h
 	gcc -Wall -g -c login.c
