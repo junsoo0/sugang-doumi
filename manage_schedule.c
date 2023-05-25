@@ -6,10 +6,15 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <dirent.h>
+#include <time.h>
 #include "sugang_doumi.h"
 
 enum schedule_choice {
 	ENTER_SCHEDULE = 1, DELETE_SCHEDULE, SCHEDULE_BACK, SCHEDULE_EXIT
+};
+
+enum date_diff {
+	PAST, PRESENT, FUTURE
 };
 
 void show_schedule(int opt);
@@ -65,10 +70,14 @@ int manage_schedule() {
 void show_schedule(int opt) {
 	int fcnt;
 	int i, j;
+	int cy, cm, cd, y, m, d;
+	int date_flag;
 	int flag = FALSE;
-	char str[INPUT_SIZE];
+	char str[INPUT_SIZE], strf[INPUT_SIZE];
 	FILE  *fp;
 	struct dirent **flist;
+	time_t t;
+	struct tm *tp;
 
 	if (opt > 0) { // main에서 접속한 경우
 		if (chdir(schedule_path) == -1) {
@@ -76,6 +85,12 @@ void show_schedule(int opt) {
 			chdir(schedule_path);
 		}
 	}
+
+	t = time(NULL);
+	tp = localtime(&t);
+	cy = tp->tm_year + 1900;
+	cm = tp->tm_mon + 1;
+	cd = tp->tm_mday;
 
 	// 파일 목록 이름순으로 정렬해서 배열에 저장
 	fcnt = scandir(".", &flist, NULL, alphasort);
@@ -101,7 +116,41 @@ void show_schedule(int opt) {
 		fgets(str, INPUT_SIZE, fp);
 		printf("(%d) %s", ++i, str);
 		fgets(str, INPUT_SIZE, fp);
+		strcpy(strf, str);
+
+		strf[2] = strf[5] = '\0';
+		y = atoi(&strf[0]) + 2000;
+		m = atoi(&strf[3]);
+		d = atoi(&strf[6]);
+
+		date_flag = FUTURE;
+		if (y < cy)
+			date_flag = PAST;
+		else if (y == cy) {
+			if (m < cm)
+				date_flag = PAST;
+			else if (m == cm) {
+				if (d < cd)
+					date_flag = PAST;
+				else if (d == cd)
+					date_flag = PRESENT;
+			}
+		}
+		str[8] = '\0';
 		printf("날짜: %s", str);
+		if (date_flag == PAST) {
+			printf("\x1b[33m");
+			printf(" 마감\n");
+			printf("\x1b[0m");
+		}
+		else if (date_flag == PRESENT) {
+			printf("\x1b[31m");
+			printf(" D-Day\n");
+			printf("\x1b[0m");
+		}
+		else
+			puts("");
+
 		fgets(str, INPUT_SIZE, fp);
 		printf("내용: %s", str);
 		fclose(fp);
