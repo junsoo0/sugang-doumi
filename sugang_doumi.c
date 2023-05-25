@@ -36,6 +36,7 @@ int credit_list();
 int clear_terminal();
 void inthandler(int s);
 void quithandler(int s);
+void terminate_program();
 
 int main() {
 	int choice;
@@ -62,6 +63,7 @@ initial:
 				sign_up();
 				break;
 			case INITIAL_EXIT:
+				terminate_program();	
 				break;
 		}
 	}
@@ -104,6 +106,7 @@ initial:
 				if(logout()) goto initial;
 				break;
 			case MAIN_EXIT:
+				terminate_program();
 				break;
 		}
 	}
@@ -235,4 +238,7 @@ void quithandler(int s){
 	
 }
 
-
+void terminate_program() {
+	printf("프로그램을 종료합니다.\n");
+	exit(0);
+}

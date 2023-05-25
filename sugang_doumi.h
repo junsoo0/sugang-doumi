@@ -16,3 +16,4 @@ extern char id[INPUT_SIZE];
 int check_valid_input(char* input, int total_num);
 int clear_terminal();
 void show_schedule(int opt);
+void terminate_program();

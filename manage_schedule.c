@@ -49,6 +49,7 @@ int manage_schedule() {
 				delete_schedule();
 				break;
 			case SCHEDULE_EXIT:
+				terminate_program();
 				break;
 		}
 
