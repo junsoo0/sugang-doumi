@@ -17,6 +17,72 @@ void enter_schedule();
 void delete_schedule();
 void wrong_date();
 
+int manage_schedule_c(int sock) {
+	char input[INPUT_SIZE];
+	int flag;
+
+	while (1) {
+		clear_terminal();
+		printf("[일정 관리]\n");
+		show_schedule(0);
+		printf("========================================\n");
+		printf("[1] 일정 등록\n");
+		printf("[2] 일정 삭제\n");
+		printf("[3] 뒤로가기\n");
+		printf("[4] 종료\n");
+		printf("----------------------------------------\n");
+		printf("선택: [1 - 4] ");
+
+		fgets(input, INPUT_SIZE, stdin);
+		input[strlen(input) - 1] = '\0';
+		if (check_valid_input(input, 5) == FALSE)
+			continue;
+		puts("");
+		flag = input[0] - '0';
+		write(sock, &flag, sizeof(flag));
+		if (flag == SCHEDULE_EXIT)
+			exit(0);
+
+		switch (flag) {
+			case ENTER_SCHEDULE:
+				enter_schedule();
+				break;
+			case DELETE_SCHEDULE:
+				delete_schedule();
+				break;
+		}
+
+		if (flag == SCHEDULE_BACK)
+			break;
+	}
+	return 0;
+}
+
+int manage_schedule_s(int sock) {
+	char input[INPUT_SIZE];
+	int flag, check;
+
+	chdir(schedule_path);
+	while (1) {
+		show_schedule(0);
+		read(sock, &flag, sizeof(flag));
+		switch (flag) {
+			case ENTER_SCHEDULE:
+				enter_schedule();
+				break;
+			case DELETE_SCHEDULE:
+				delete_schedule();
+				break;
+		}
+
+		if (flag == SCHEDULE_BACK)
+			break;
+	}
+	chdir("..");
+
+	return 0;
+}
+
 int manage_schedule() {
 	char input[INPUT_SIZE];
 
@@ -57,6 +123,91 @@ int manage_schedule() {
 	chdir("..");
 
 	return 0;
+}
+
+void show_schedule_c(int sock, int opt) {
+	int fcnt;
+	int i, j;
+	int flag = FALSE;
+	char str[INPUT_SIZE];
+	FILE  *fp;
+	struct dirent **flist;
+
+	read(sock, &fcnt, sizeof(fcnt));
+	i = 0;
+	for (j = 0; j < fcnt - 2; j++) {
+		if (flag == FALSE) {
+			if (opt > 0)
+				printf("마감일자순 %d개의 일정을 표시합니다.\n", opt);
+			else
+				printf("전체 일정을 표시합니다.\n");
+
+			printf("========================================\n");
+			flag = TRUE;
+		}
+		else
+			puts("");
+
+		read(sock, str, INPUT_SIZE);
+		printf("(%d) %s", ++i, str);
+		read(sock, str, INPUT_SIZE);
+		printf("날짜: %s", str);
+		read(sock, str, INPUT_SIZE);
+		printf("내용: %s", str);
+
+		if (opt > 0 && opt == i)
+			break;
+	}
+
+	if (i == 0) {
+		printf("========================================\n");
+		printf("등록된 일정이 없습니다.\n");
+	}
+}
+
+void show_schedule_s(int sock, int opt) {
+	int fcnt;
+	int i, j;
+	int flag = FALSE;
+	char str[INPUT_SIZE];
+	FILE  *fp;
+	struct dirent **flist;
+
+	if (opt > 0) { // main에서 접속한 경우
+		if (chdir(schedule_path) == -1) {
+			mkdir("schedule", FOLDER_PERMISSION);
+			chdir(schedule_path);
+		}
+	}
+
+	// 파일 목록 이름순으로 정렬해서 배열에 저장
+	fcnt = scandir(".", &flist, NULL, alphasort);
+	write(sock, &fcnt, sizeof(fcnt));
+
+	i = 0;
+	for (j = 0; j < fcnt; j++) {
+		if (strcmp(flist[j]->d_name, ".") == 0 || strcmp(flist[j]->d_name, "..") == 0)
+			continue;
+
+		fp = fopen(flist[j]->d_name, "r");
+		fgets(str, INPUT_SIZE, fp);
+		write(sock, str, INPUT_SIZE);
+		fgets(str, INPUT_SIZE, fp);
+		write(sock, str, INPUT_SIZE);
+		fgets(str, INPUT_SIZE, fp);
+		write(sock, str, INPUT_SIZE);
+		fclose(fp);
+
+		if (opt > 0 && opt == i)
+			break;
+	}
+
+	for (j = 0; j < fcnt; j++)
+		free(flist[j]);
+	free(flist);
+
+	if (opt > 0) // main에서 접속한 경우
+		chdir("..");
 }
 
 void show_schedule(int opt) {

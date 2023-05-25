@@ -16,6 +16,104 @@ char schedule_path[INPUT_SIZE];
 char credit_path[INPUT_SIZE];
 char id[INPUT_SIZE];
 
+int login_c(int sock) {
+	int check = 0;
+	char passwd[INPUT_SIZE];
+	char login_id[INPUT_SIZE];
+	struct termios info;
+	tcgetattr(0, &info);
+
+	printf("[로그인]\n");
+	printf("ID를 입력하세요(학번): ");
+	scanf("%s", login_id);
+	getchar();
+	
+	write(sock, login_id, INPUT_SIZE);
+	read(sock, &check, sizeof(check));
+	if(check == FALSE){
+		printf("존재하지 않는 ID(학번)입니다.\n");
+		printf("메뉴로 돌아갑니다.\n");
+		sleep(1);
+		chdir(home_path);
+		return -1;		
+	}
+	else {
+		puts("");
+		printf("비밀번호를 입력하세요: ");
+		info.c_lflag &= ~ECHO;
+		tcsetattr(0, TCSANOW, &info);
+		scanf("%s", passwd);
+		getchar();
+
+		info.c_lflag |= ECHO;
+		tcsetattr(0, TCSANOW, &info);
+		write(sock, passwd, sizeof(passwd));
+		read(sock, &check, sizeof(check));
+		if (check == TRUE) {
+			puts("");
+			printf("로그인 성공.\n");
+			sleep(1);
+			// 무한루프 깨고 로그인 성공 후 화면으로 이동
+			return 0;
+		}
+		else {
+			puts("");
+			printf("비밀번호가 일치하지 않습니다.\n");
+			sleep(1);
+			return -1;
+		}
+	}
+	return -1;
+}
+
+int login_s(int sock) {
+	int check;
+	char buf[INPUT_SIZE];
+	char passwd[INPUT_SIZE];
+	char login_id[INPUT_SIZE];
+
+	read(sock, login_id, INPUT_SIZE);
+	if(chdir(login_id) == -1)
+		check = FALSE;
+	else
+		check = TRUE;
+
+	write(sock, &check, sizeof(check));
+	if(check == FALSE)
+		return -1;
+	else {
+		read(sock, passwd, INPUT_SIZE);
+		// 프로그램 재실행시 buf가 초기화가 안됨 그래서 초기화 해줘야함
+		for(int i = 0; i < INPUT_SIZE; i++) buf[i] = '\0';
+		int passwd_fd = open("passwd", O_RDONLY);
+		read(passwd_fd, buf, INPUT_SIZE);
+		close(passwd_fd);
+	
+		if(strcmp(buf, passwd) == 0)
+			check = TRUE;
+		else
+			check = FALSE;
+		write(sock, &check, sizeof(check));
+		if (check == TRUE) {
+			strcpy(id, login_id);
+			// 각 폴더에 접근하기 위한 경로 설정
+			strcpy(user_path, home_path);
+			strcat(user_path, "/");
+			strcat(user_path, login_id);
+			strcpy(schedule_path, user_path);
+			strcat(schedule_path, "/schedule");
+			strcpy(credit_path, user_path);
+			strcat(credit_path, "/credit");
+			mkdir(credit_path, FOLDER_PERMISSION);
+			return 0;
+		}
+		else {
+			chdir(home_path);
+			return -1;
+		}
+	}
+}
+
 int login(){
 	char buf[INPUT_SIZE];
 	char passwd[INPUT_SIZE];
@@ -23,19 +121,6 @@ int login(){
 	char ans;
 	struct termios info;
 	tcgetattr(0, &info);
-
-	/* UI 변경 중 -> sugang_doumi.h에 함수로 따로 분리 
-	int pid = fork();
-	if(pid == 0){
-		execlp("clear", "clear", NULL);
-	}
-	wait(NULL);
-	*/
-
-	printf("[로그인]\n");
-	printf("ID를 입력하세요(학번): ");
-	scanf("%s", login_id);
-	getchar();
 
 	if(chdir(login_id) == -1){
 		printf("존재하지 않는 ID(학번)입니다.\n");
@@ -105,6 +190,123 @@ label:
 	return 0;
 }
 
+int sign_up_c(int sock) {
+	char sign_up_id[INPUT_SIZE];
+	char passwd1[INPUT_SIZE];
+	char passwd2[INPUT_SIZE];
+	char name[INPUT_SIZE];
+	char school[INPUT_SIZE];
+	struct termios info;
+	tcgetattr(0, &info);
+	int check;
+
+	printf("[회원가입]\n");
+	printf("회원가입 하실 ID를 입력하세요(학번): ");
+	scanf("%s", sign_up_id);
+	getchar();
+
+	write(sock, &sign_up_id, INPUT_SIZE);
+	read(sock, &check, sizeof(check));
+	if(check == FALSE) {
+		printf("이미 존재하는 ID입니다.\n");
+		printf("메뉴로 돌아갑니다.\n");
+		sleep(1);
+		return -1;
+	}
+
+	info.c_lflag &= ~ECHO;
+	tcsetattr(0, TCSANOW, &info);
+	int passwd_check = 1;
+	int passwd_fd;
+	while(passwd_check){
+		puts("");
+		printf("비밀번호를 설정하세요: ");
+		scanf("%s", passwd1);
+		getchar();
+	
+		puts("");
+		printf("비밀번호를 다시 입력하세요: ");
+		scanf("%s", passwd2);
+		getchar();
+	
+		if(strcmp(passwd1, passwd2) == 0){
+			puts("");
+			printf("비밀번호가 정상적으로 설정되었습니다.\n");
+			write(sock, passwd1, INPUT_SIZE);
+
+			passwd_check = 0;
+		}
+		else{
+			puts("");
+			printf("두 비밀번호가 일치하지 않습니다. \n");
+		}
+	}
+	
+	info.c_lflag |= ECHO;
+	tcsetattr(0, TCSANOW, &info);
+
+	puts("");
+	printf("당신의 이름을 입력하세요: ");
+	scanf("%s", name);
+	getchar();
+	write(sock, name, INPUT_SIZE);
+
+	puts("");
+	printf("당신의 출신 초등학교를 입력하세요(비밀번호 찾기 용도): ");
+	scanf("%s", school);
+	getchar();
+	write(sock, school, INPUT_SIZE);
+
+	puts("");
+	printf("회원가입이 완료되었습니다.\n");
+	sleep(1);
+
+	return -1;
+}
+
+int sign_up_s(int sock) {
+	int check;
+	char sign_up_id[INPUT_SIZE];
+	char passwd1[INPUT_SIZE];
+	char passwd2[INPUT_SIZE];
+	char name[INPUT_SIZE];
+	char school[INPUT_SIZE];
+
+	read(sock, &sign_up_id, INPUT_SIZE);
+	if(chdir(sign_up_id) != -1)
+		check = FALSE;
+	else
+		check = TRUE;
+	write(sock, &check, sizeof(check));
+	if (check == FALSE) {
+		chdir(home_path);
+		return -1;
+	}
+
+	mkdir(sign_up_id, FOLDER_PERMISSION);
+	chdir(sign_up_id);
+	int passwd_fd;
+
+	read(sock, passwd1, INPUT_SIZE);
+	passwd_fd = creat("passwd", FILE_PERMISSION);
+	write(passwd_fd, passwd1, strlen(passwd1));
+
+	read(sock, name, INPUT_SIZE);
+	int name_fd = creat("name", FILE_PERMISSION);
+	write(name_fd, name, strlen(name));
+	
+	read(sock, school, INPUT_SIZE);
+	int school_fd = creat("school", FILE_PERMISSION);
+	write(school_fd, school, strlen(school));
+
+	chdir(home_path);
+	close(passwd_fd);
+	close(name_fd);
+	close(school_fd);
+
+	return -1;
+}
+
 int sign_up(){
 	char sign_up_id[INPUT_SIZE];
 	char passwd1[INPUT_SIZE];
@@ -113,14 +315,6 @@ int sign_up(){
 	char school[INPUT_SIZE];
 	struct termios info;
 	tcgetattr(0, &info);
-
-	/* UI 변경 중 -> sugang_doumi.h에 함수로 따로 분리
-	int pid = fork();
-	if(pid == 0){
-		execlp("clear", "clear", NULL);
-	}
-	wait(NULL);
-	*/
 
 	printf("[회원가입]\n");
 	printf("회원가입 하실 ID를 입력하세요(학번): ");
@@ -195,6 +389,92 @@ int sign_up(){
 	close(school_fd);
 
 	return -1;
+}
+
+int find_passwd_c(int sock) {
+	char find_id[INPUT_SIZE];
+	char school_name[INPUT_SIZE];
+	char school_buf[INPUT_SIZE];
+	char passwd_buf[INPUT_SIZE];
+	int check;
+
+	printf("[비밀번호 찾기]\n");
+	printf("ID를 입력하세요(학번): ");
+	scanf("%s", find_id);
+	getchar();
+	write(sock, find_id, INPUT_SIZE);
+	read(sock, &check, sizeof(check));
+
+	if (check == FALSE) {
+		printf("존재하지 않는 ID입니다.\n");
+		printf("메뉴로 돌아갑니다.\n");
+		sleep(1);
+		return -1;
+	}
+
+	printf("당신의 출신 초등학교를 입력하세요: ");
+	scanf("%s", school_name);
+	getchar();
+	write(sock, school_name, INPUT_SIZE);
+	read(sock, &check, sizeof(check));
+	if (check == TRUE) {
+		read(sock, passwd_buf, INPUT_SIZE);
+		printf("비밀번호는 %s 입니다.\n", passwd_buf);
+		printf("메뉴로 돌아갑니다.\n");
+		sleep(2);
+		return -1;
+	}
+	else {
+		printf("입력하신 정보가 회원정보와 일치하지 않습니다.\n");
+		printf("메뉴로 돌아갑니다.\n");
+		sleep(1);
+		return -1;
+	}
+}
+
+int find_passwd_s(int sock) {
+	char find_id[INPUT_SIZE];
+	char school_name[INPUT_SIZE];
+	char school_buf[INPUT_SIZE];
+	char passwd_buf[INPUT_SIZE];
+	int check;
+
+	read(sock, find_id, INPUT_SIZE);
+	if(chdir(find_id) == -1)
+		check = FALSE;
+	else
+		check = TRUE;
+	write(sock, &check, sizeof(check));
+	if (check == FALSE) {
+		chdir(home_path);
+		return -1;
+	}
+
+	read(sock, school_name, INPUT_SIZE);
+	for(int i = 0; i < INPUT_SIZE; i++) school_buf[i] = '\0';
+	int school_fd = open("school", O_RDONLY);
+	read(school_fd, school_buf, INPUT_SIZE);
+	close(school_fd);
+
+	if(strcmp(school_name, school_buf) == 0){
+		check = TRUE;
+		write(sock, &check, sizeof(check));
+		for(int j = 0; j < INPUT_SIZE; j++) passwd_buf[j] = '\0';
+		int passwd_fd = open("passwd", O_RDONLY);
+		read(passwd_fd, passwd_buf, INPUT_SIZE);
+		close(passwd_fd);
+
+		write(sock, passwd_buf, INPUT_SIZE);
+		chdir(home_path);
+		return -1;
+	}
+	else {
+		check = FALSE;
+		write(sock, &check, sizeof(check));
+		chdir(home_path);
+		return -1;
+	}
+
 }
 
 int find_passwd(){
