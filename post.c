@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS  
+
 #include <stdio.h>
 #include <dirent.h>
 #include <string.h>
@@ -16,7 +18,6 @@ int write_post();
 
 const char* folderPath = "post_lst";
 
-//
 // char user_path[INPUT_SIZE] = "./2021112563";
 
 int main() {
@@ -80,7 +81,6 @@ int write_post()
 	FILE *fp;
 	char new_text[INPUT_SIZE];
 	
-	// post_lst 폴더에 총 몇개 post가 있는지 count
 	struct stat st;
 	if (stat(folderPath, &st) != 0 || !S_ISDIR(st.st_mode)) {
 		if (mkdir(folderPath, 0700) != 0) {
@@ -95,15 +95,18 @@ int write_post()
 		return 1;
 	}
 	
-	int count = 0;
-	
 	struct dirent* entry;
+	char temp_name[INPUT_SIZE];
+	int temp_num, max_num = 1, temp_len, new_len;
 	while ((entry = readdir(dir)) != NULL) {
-		if (entry->d_type == DT_REG) count++;
+		strcpy(temp_name, entry->d_name);
+		temp_len = strlen(temp_name);
+		new_len = temp_len - 4;
+		temp_name[new_len] = '\0';
+		temp_num = atoi(temp_name);
+		
+		if (temp_num >= max_num) max_num = temp_num + 1;
 	}
-	
-	closedir(dir);
-	
 	
 	// 작성할 post 제목과 내용 입력받음
 	printf("title : ");
@@ -111,7 +114,7 @@ int write_post()
 	
 	
 	char filename[20];    // file open
-	sprintf(filename, "%s/%d.txt", folderPath, ++count);
+	sprintf(filename, "%s/%d.txt", folderPath, max_num);
 	
 	fp = fopen(filename, "w");
 	if (fp < 0) {
