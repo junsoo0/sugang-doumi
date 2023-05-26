@@ -81,6 +81,7 @@ int login(){
 			while(1){
 				puts("");
 				printf("비밀번호가 일치하지 않습니다.\n");
+				printf("메뉴로 돌아갑니다.\n");
 				chdir(home_path);
 				sleep(1);
 				return -1;
