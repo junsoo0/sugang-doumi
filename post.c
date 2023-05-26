@@ -150,24 +150,26 @@ int show_post() {
 	char filePath[INPUT_SIZE];
 	char line[INPUT_SIZE];
 	
-	DIR* dir = opendir(folderPath);
-	if (dir == NULL) {
-		perror("folder open fail");
+	struct dirent **namelist;
+	int count = 0;
+	
+	if ((count = scandir(folderPath, &namelist, NULL, alphasort) ) == -1) {
+		perror("folder open error");
 		return 0;
 	}
 	
-	struct dirent* entry;
-	while ((entry = readdir(dir)) != NULL) {
-		if (entry->d_type == DT_REG) {
-			// sprintf(filePath, "%s/%s", folderPath, entry->d_name);
+	for (int i = (count - 1); i >= 0; i--) {
+		
+		if (namelist[i]->d_type == DT_REG) {
 			strcpy(filePath, folderPath);
 			strcat(filePath, "/");
-			strcat(filePath, entry->d_name);
+			strcat(filePath, namelist[i]->d_name);
+			// 혹시 에러나면 d_name에 끝에 줄바꿈문자 제거하고 다시 시도
 			
 			FILE* fp = fopen(filePath, "r");
 			if (fp != NULL) {
 				cnt++;
-				printf("%.*s", (int)(strlen(entry->d_name) - 4), entry->d_name);    // 맨 끝의 .txt 빼고 출력 (글 번호만 출력)
+				printf("%.*s", (int)(strlen(namelist[i]->d_name) - 4), namelist[i]->d_name);
 				
 				if (fgets(line, INPUT_SIZE, fp) != NULL) {
 					printf(". %s\n", line);   // 제목 출력
@@ -175,18 +177,17 @@ int show_post() {
 				
 				fclose(fp);
 			}
-		
 		}
-		
 	}
-
+	
 	if (cnt == 0)
-		printf("\n게시글이 존재하지 않습니다.\n\n");	
-
-	closedir(dir);
-
-
-	printf("==============================================\n");
+		printf("\n게시글이 존재하지 않습니다.\n\n");
+	
+	for(int i = 0; i < count; i++) {    // 데이터 메모리 해제
+        free(namelist[i]);
+    	}
+    	
+    	free(namelist);
 	
 print_post:
 	printf("읽을 포스트의 번호 입력(이전으로 돌아가기는 0번) : ");
@@ -201,11 +202,6 @@ print_post:
 	
 	snprintf(filePath, INPUT_SIZE, "%s/%d.txt", folderPath, input_num);
 	
-	/*strcpy(filePath, folderPath);
-	strcat(filePath, "/");
-	strcat(filePath, &input_num);
-	strcat(filePath, ".txt");
-	*/
 	
 	FILE* fp = fopen(filePath, "r");
 	if (fp == NULL) {
@@ -244,26 +240,31 @@ int my_post()
 	strcat(temp_userPath, "\n");
 	printf("나의 작성 목록 : \n\n");
 	
-	DIR* dir = opendir(folderPath);
-	if (dir == NULL) {
-		perror("DIR open fail");
+	struct dirent **namelist;
+	int count = 0, cnt = 0;
+	
+	if ((count = scandir(folderPath, &namelist, NULL, alphasort) ) == -1) {
+		perror("folder open error");
 		return 0;
 	}
 	
-	struct dirent* entry;
-	while ((entry = readdir(dir)) != NULL) {
-		if (entry->d_type == DT_REG) {
+	for (int i = (count - 1); i >= 0; i--) {
+		//printf("%s\n", namelist[i]->d_name);
+		
+		if (namelist[i]->d_type == DT_REG) {
 			strcpy(filePath, folderPath);
 			strcat(filePath, "/");
-			strcat(filePath, entry->d_name);
+			strcat(filePath, namelist[i]->d_name);
+			// 혹시 에러나면 d_name에 끝에 줄바꿈문자 제거하고 다시 시도
 			
-			FILE *fp = fopen(filePath, "r");
+			FILE* fp = fopen(filePath, "r");    // 파일 열기
 			if (fp != NULL) {
+				cnt++;
+				
 				fgets(line, INPUT_SIZE, fp);
 				fgets(line, INPUT_SIZE, fp);    // 작성자 정보가 2번째줄에 있으므로 2번째 줄 가져오기
 				if (!strcmp(line, temp_userPath)) {    // 작성자 일치
-					// printf("%s\n", entry->d_name);
-					printf("%.*s. ", (int)(strlen(entry->d_name) - 4), entry->d_name);
+					printf("%.*s. ", (int)(strlen(namelist[i]->d_name) - 4), namelist[i]->d_name);
 					fseek(fp, 0, SEEK_SET);    // 파일포인터 처음으로 이동
 					printf("Title: ");
 					fgets(line, INPUT_SIZE, fp);
@@ -282,7 +283,16 @@ int my_post()
 		}
 	}
 	
-	closedir(dir);
+	if (cnt == 0)
+		printf("\n작성한 글이 존재하지 않습니다.\n\n");
+	
+	for(int i = 0; i < count; i++) {    // 데이터 메모리 해제
+        	free(namelist[i]);
+    	}
+    	
+    	free(namelist);
+	
+	
 
 	int del_num, x;	
 do_delete:
