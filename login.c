@@ -258,15 +258,18 @@ int change_passwd(){
 	tcsetattr(0, TCSANOW, &info);
 	scanf("%s", old_passwd);
 	getchar();
+	puts("");
 
 	if(strcmp(old_passwd, buf) == 0){
 		printf("변경하실 비밀번호를 입력하세요: ");
 		scanf("%s", new_passwd1);
 		getchar();
+		puts("");
 		
 		printf("변경하실 비밀번호를 다시 입력하세요: ");
 		scanf("%s", new_passwd2);
 		getchar();
+		puts("");
 		
 		info.c_lflag |= ECHO;
 		tcsetattr(0, TCSANOW, &info);
