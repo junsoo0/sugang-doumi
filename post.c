@@ -230,7 +230,7 @@ print_post:
 
 int my_post() 
 {
-	const char* folderPath = "post_lst";
+	const char* folderPath = "../post_lst";
 	char filePath[INPUT_SIZE];
 	char temp_userPath[INPUT_SIZE];
 	char line[INPUT_SIZE];
