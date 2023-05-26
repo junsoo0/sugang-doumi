@@ -3,6 +3,8 @@
 ## 프로젝트 개요
 대학생들의 학업을 도와줄 수강도우미 프로그램입니다.
 
+![수강도우미 초기화면](https://github.com/junsoo0/sugang_doumi/blob/main/img/sugang_doumi.png)
+
 ## 개발 환경
 * OS: Ubuntu 20+
 * Language: C
