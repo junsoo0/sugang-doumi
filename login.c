@@ -315,7 +315,7 @@ int logout(){
          chdir(home_path);
          for(int i = 0; i < INPUT_SIZE; i++)
             id[i] = '\0';
-            return 1;
+		return 1;
       case 'N' :
       case 'n' :   return 0;
       default : printf("잘못된 입력입니다.\n"); 
