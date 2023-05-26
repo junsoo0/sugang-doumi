@@ -13,7 +13,7 @@
 char sub_name[INPUT_SIZE];
 char prof_name[INPUT_SIZE];
 char filename[INPUT_SIZE];
-const char* folder_path = "subject_lst";
+const char* folder_path = "../subject_lst";
 
 int write_op();
 int show_op();

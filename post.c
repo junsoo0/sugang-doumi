@@ -16,7 +16,7 @@ int my_post();
 int show_post();
 int write_post();
 
-const char* folderPath = "post_lst";
+const char* folderPath = "../post_lst";
 
 // char user_path[INPUT_SIZE] = "./2021112563";
 
