@@ -20,6 +20,7 @@ int show_op();
 int write_now(char* filename);
 
 int evaluate_lecture() {
+	clear_terminal();
 	int option;
 	
 	while (1) {

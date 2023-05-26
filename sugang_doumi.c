@@ -102,6 +102,7 @@ initial:
 				break;
 			case FREE_BOARD:
 				free_board();
+				break;
 			case MANAGE_SCHEDULE:
 				manage_schedule();
 				break;

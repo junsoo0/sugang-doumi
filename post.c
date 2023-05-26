@@ -21,6 +21,7 @@ const char* folderPath = "post_lst";
 // char user_path[INPUT_SIZE] = "./2021112563";
 
 int free_board() {
+	clear_terminal();
 	int input_num;
 	
 	while (1) {
