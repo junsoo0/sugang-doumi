@@ -51,8 +51,6 @@ int main() {
 
 	while (check == -1) {
 initial:	
-		clear_terminal();
-			
 		choice = initial_UI();
 		switch (choice) {
 			case LOGIN:
@@ -72,8 +70,6 @@ initial:
 	check = -1;
 	
 	while (1) {
-		clear_terminal();
-
 		choice = main_UI();
 		switch (choice) {
 			case CALCULATE_GPA:{
@@ -125,6 +121,7 @@ int initial_UI() {
 	char input[INPUT_SIZE];
 
 	while (1) {
+		clear_terminal();
 		printf("========================================\n");
 		puts("");
 		printf("               수강 도우미              \n");
@@ -139,8 +136,10 @@ int initial_UI() {
 		
 		fgets(input, INPUT_SIZE, stdin);
 		input[strlen(input) - 1] = '\0';
-		if (check_valid_input(input, 4) == FALSE)
+		if (check_valid_input(input, 4) == FALSE) {
+			sleep(1);
 			continue;
+		}
 		puts("");
 		
 		return input[0] - '0';
@@ -150,10 +149,11 @@ int initial_UI() {
 int main_UI() {
 	char input[INPUT_SIZE];
 
-	printf("\x1b[32m");
-	printf("[메인 화면]\n");
-	printf("\x1b[0m");
 	while (1) {
+		clear_terminal();
+		printf("\x1b[32m");
+		printf("[메인 화면]\n");
+		printf("\x1b[0m");
 		show_schedule(3);
 		printf("========================================\n");
 		printf("[1] 학점 계산\n");
@@ -168,8 +168,10 @@ int main_UI() {
 
 		fgets(input, INPUT_SIZE, stdin);
 		input[strlen(input) - 1] = '\0';
-		if (check_valid_input(input, 7) == FALSE)
+		if (check_valid_input(input, 7) == FALSE) {
+			sleep(1);
 			continue;
+		}
 		puts("");
 		
 		return input[0] - '0';

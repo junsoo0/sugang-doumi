@@ -35,15 +35,16 @@ int manage_schedule() {
 		printf("========================================\n");
 		printf("[1] 일정 등록\n");
 		printf("[2] 일정 삭제\n");
-		printf("[3] 뒤로가기\n");
-		printf("[4] 종료\n");
+		printf("[3] 돌아가기\n");
 		printf("----------------------------------------\n");
-		printf("선택: [1 - 4] ");
+		printf("선택: [1 - 3] ");
 
 		fgets(input, INPUT_SIZE, stdin);
 		input[strlen(input) - 1] = '\0';
-		if (check_valid_input(input, 5) == FALSE)
+		if (check_valid_input(input, 3) == FALSE) {
+			sleep(1);
 			continue;
+		}
 		puts("");
 
 		switch (input[0] - '0') {
@@ -52,9 +53,6 @@ int manage_schedule() {
 				break;
 			case DELETE_SCHEDULE:
 				delete_schedule();
-				break;
-			case SCHEDULE_EXIT:
-				terminate_program();
 				break;
 		}
 
