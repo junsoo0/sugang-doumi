@@ -20,7 +20,7 @@ const char* folderPath = "post_lst";
 
 // char user_path[INPUT_SIZE] = "./2021112563";
 
-int free_board() {
+int main() {
 	int input_num;
 	
 	while (1) {
@@ -145,7 +145,7 @@ int write_post()
 	
 	
 int show_post() {
-	int input_num;
+	int input_num, cnt = 0;
 	char filePath[INPUT_SIZE];
 	char line[INPUT_SIZE];
 	
@@ -165,6 +165,7 @@ int show_post() {
 			
 			FILE* fp = fopen(filePath, "r");
 			if (fp != NULL) {
+				cnt++;
 				printf("%.*s", (int)(strlen(entry->d_name) - 4), entry->d_name);    // 맨 끝의 .txt 빼고 출력 (글 번호만 출력)
 				
 				if (fgets(line, INPUT_SIZE, fp) != NULL) {
@@ -177,6 +178,8 @@ int show_post() {
 		}
 		
 	}
+	
+	if (cnt == 0) printf("\n게시글이 존재하지 않습니다.\n\n");
 	
 	closedir(dir);
 
@@ -338,4 +341,15 @@ do_quit:
 	if (quit == 'q') return 0;
 	else goto do_quit;
 	
+}
+	
+	
+int clear_terminal() {
+	int pid;
+
+	pid = fork();
+	if(pid == 0){
+		execlp("clear", "clear", NULL);
+	}
+	wait(NULL);
 }
