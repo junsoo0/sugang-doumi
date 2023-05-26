@@ -300,26 +300,28 @@ int change_passwd(){
 }
 
 int logout(){
-	char ans;
+   char ans[INPUT_SIZE];
+   char ans_char;
 
-	while(1){
- 	printf("로그아웃 하시겠습니까? (Y/N): ");	
-	ans = getchar();
-	getchar();
+   while(1){
+    printf("로그아웃 하시겠습니까? (Y/N): ");   
+   scanf("%s", ans);
+   getchar();
+   ans_char = ans[0];
 
-	switch(ans){
-		case 'Y' :
-		case 'y' :
-			chdir(home_path);
-			for(int i = 0; i < INPUT_SIZE; i++)
-				id[i] = '\0';
-			return 1;
-		case 'N' :
-		case 'n' :	return 0;
-		default : break;
+   switch(ans_char){
+      case 'Y' :
+      case 'y' :
+         chdir(home_path);
+         for(int i = 0; i < INPUT_SIZE; i++)
+            id[i] = '\0';
+            return 1;
+      case 'N' :
+      case 'n' :   return 0;
+      default : printf("잘못된 입력입니다.\n"); 
+            break;
+
+   }
 
 	}
-
-	}
-
 }
