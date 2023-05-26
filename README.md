@@ -5,6 +5,8 @@
 
 ![수강도우미 초기화면](https://github.com/junsoo0/sugang_doumi/blob/main/img/sugang_doumi.png)
 
+![수강도우미 메인화면](https://github.com/junsoo0/sugang_doumi/blob/main/img/sugang_doumi_main_screen.png)
+
 ## 개발 환경
 * OS: Ubuntu 20+
 * Language: C
