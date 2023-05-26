@@ -13,7 +13,7 @@ enum initial_choice {
 };
 
 enum main_choice {
-	CALCULATE_GPA = 1, EVALUATE_LECTURE, MANAGE_SCHEDULE, CHANGE_PASSWD, LOGOUT, MAIN_EXIT
+	CALCULATE_GPA = 1, EVALUATE_LECTURE, FREE_BOARD, MANAGE_SCHEDULE, CHANGE_PASSWD, LOGOUT, MAIN_EXIT
 };
 
 enum credit_choice {
@@ -37,6 +37,8 @@ int clear_terminal();
 void inthandler(int s);
 void quithandler(int s);
 void terminate_program();
+int evaluate_lecture();
+int free_board();
 
 int main() {
 	int choice;
@@ -96,7 +98,10 @@ initial:
 				break;
 				}
 			case EVALUATE_LECTURE:
+				evaluate_lecture();
 				break;
+			case FREE_BOARD:
+				free_board();
 			case MANAGE_SCHEDULE:
 				manage_schedule();
 				break;
@@ -153,15 +158,16 @@ int main_UI() {
 		printf("[1] 학점 계산\n");
 		printf("[2] 강의 평가\n");
 		printf("[3] 일정 관리\n");
-		printf("[4] 비밀번호 변경\n");
-		printf("[5] 로그아웃\n");
-		printf("[6] 종료\n");
+		printf("[4] 자유게시판\n");
+		printf("[5] 비밀번호 변경\n");
+		printf("[6] 로그아웃\n");
+		printf("[7] 종료\n");
 		printf("----------------------------------------\n");
-		printf("선택: [1 - 6] ");
+		printf("선택: [1 - 7] ");
 
 		fgets(input, INPUT_SIZE, stdin);
 		input[strlen(input) - 1] = '\0';
-		if (check_valid_input(input, 6) == FALSE)
+		if (check_valid_input(input, 7) == FALSE)
 			continue;
 		puts("");
 		
@@ -225,8 +231,6 @@ void inthandler(int s){
 }
 
 void quithandler(int s){
-	char ans;
-	int check = 1;
 	struct termios info;
 	tcgetattr(0, &info);
 	

@@ -20,7 +20,7 @@ const char* folderPath = "post_lst";
 
 // char user_path[INPUT_SIZE] = "./2021112563";
 
-int main() {
+int free_board() {
 	int input_num;
 	
 	while (1) {
@@ -338,15 +338,4 @@ do_quit:
 	if (quit == 'q') return 0;
 	else goto do_quit;
 	
-}
-	
-	
-int clear_terminal() {
-	int pid;
-
-	pid = fork();
-	if(pid == 0){
-		execlp("clear", "clear", NULL);
-	}
-	wait(NULL);
 }

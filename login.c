@@ -20,7 +20,6 @@ int login(){
 	char buf[INPUT_SIZE];
 	char passwd[INPUT_SIZE];
 	char login_id[INPUT_SIZE];
-	char ans;
 	struct termios info;
 	tcgetattr(0, &info);
 
@@ -45,7 +44,6 @@ int login(){
 		return -1;		
 	}
 	else{
-label:
 		printf("비밀번호를 입력하세요: ");
 		info.c_lflag &= ~ECHO;
 		tcsetattr(0, TCSANOW, &info);
@@ -81,21 +79,11 @@ label:
 		}
 		else {
 			while(1){
+				puts("");
 				printf("비밀번호가 일치하지 않습니다.\n");
-				printf("메뉴로 돌아가시겠습니까? (Y/N) : ");
-				ans = getchar();
-				getchar();
-
-				switch(ans){
-					case 'Y' : 
-					case 'y' :
-						chdir(home_path);
-						return -1;
-					case 'N' : 
-					case 'n' :
-						goto label;
-					default: break;	   
-				}
+				chdir(home_path);
+				sleep(1);
+				return -1;
 			}
 		}
 	}

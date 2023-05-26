@@ -13,13 +13,13 @@
 char sub_name[INPUT_SIZE];
 char prof_name[INPUT_SIZE];
 char filename[INPUT_SIZE];
-const char* folderPath = "subject_lst";
+const char* folder_path = "subject_lst";
 
 int write_op();
 int show_op();
 int write_now(char* filename);
 
-int main() {
+int evaluate_lecture() {
 	int option;
 	
 	while (1) {
@@ -67,9 +67,9 @@ int show_op()
 {
 	char new_text[INPUT_SIZE];
 	struct stat st;    // 폴더 존재 확인, 없으면 생성 후 메뉴화면으로 복귀
-	if (stat(folderPath, &st) != 0 || !S_ISDIR(st.st_mode)) {
+	if (stat(folder_path, &st) != 0 || !S_ISDIR(st.st_mode)) {
 		printf("조회할 강의평이 없습니다.\n");
-		if (mkdir(folderPath, 0700) != 0) {
+		if (mkdir(folder_path, 0700) != 0) {
 			perror("make folder fail");
 			return 1;
 		}
@@ -88,7 +88,7 @@ view:
 	
 	printf("\n----------------------------------------\n");
 	
-	strcpy(filename, folderPath);
+	strcpy(filename, folder_path);
 	strcat(filename, "/");
 	strcat(filename, sub_name);
 	strcat(filename, "_");
@@ -133,6 +133,7 @@ view:
 			return 0;
 		}
 	}
+	return 0;
 }
 
 
@@ -170,12 +171,11 @@ int write_now(char* filename)
 
 int write_op()
 {
-	int fd, n;
 	char new_text[INPUT_SIZE];
 	
 	struct stat st;    // 폴더 존재 확인, 없으면 생성
-	if (stat(folderPath, &st) != 0 || !S_ISDIR(st.st_mode)) {
-		if (mkdir(folderPath, 0700) != 0) {
+	if (stat(folder_path, &st) != 0 || !S_ISDIR(st.st_mode)) {
+		if (mkdir(folder_path, 0700) != 0) {
 			perror("make folder fail");
 			return 1;
 		}
@@ -190,7 +190,7 @@ int write_op()
 	prof_name[strlen(prof_name) - 1] = '\0';    // 개행 제거
 	
 	// 파일 생성 or 오픈
-	strcpy(filename, folderPath);
+	strcpy(filename, folder_path);
 	strcat(filename, "/");
 	strcat(filename, sub_name);
 	strcat(filename, "_");
@@ -233,14 +233,4 @@ int write_op()
 	fclose(fp);
 	
 	return 0;
-}
-
-int clear_terminal() {
-	int pid;
-
-	pid = fork();
-	if(pid == 0){
-		execlp("clear", "clear", NULL);
-	}
-	wait(NULL);
 }
