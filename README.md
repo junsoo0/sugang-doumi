@@ -4,8 +4,8 @@
 대학생들의 학업을 도와줄 수강도우미 프로그램입니다.
 
 ## 개발 환경
-1. OS: Ubuntu 20+
-2. Language: C
+* OS: Ubuntu 20+
+* Language: C
 
 ## 주요 기능
 1. 학점 계산
