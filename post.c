@@ -21,12 +21,12 @@ const char* folderPath = "../post_lst";
 // char user_path[INPUT_SIZE] = "./2021112563";
 
 int free_board() {
-	clear_terminal();
 	int input_num;
 	
 	while (1) {
 		printf("\x1b[32m");
-		printf("자유게시판\n");
+		clear_terminal();
+		printf("[자유게시판]\n");
 		printf("\x1b[0m");
 		printf("----------------------------------------\n");
 		printf("[1] 게시글 보기\n");
