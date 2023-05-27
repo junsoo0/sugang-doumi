@@ -33,43 +33,35 @@ int free_board() {
 		printf("[2] 게시글 작성\n");
 		printf("[3] 내가 쓴 글 보기, 삭제하기\n");
 		printf("[4] 돌아가기\n");
-		printf("----------------------------------------\n\n");
+		printf("----------------------------------------\n");
 	
-		while (1) {
-			printf("선택: [1 - 4] ");
-			if ((scanf("%d", &input_num) != 1) || (input_num > 4) || (input_num < 1)) {
-				getchar();
-				printf("잘못된 입력입니다. 1, 2, 3, 4 중 하나를 입력하세요.\n");
-				continue;
-			}
-			else {
-				getchar();
-				break;
-			}
+		printf("선택: [1 - 4] ");
+		if ((scanf("%d", &input_num) != 1) || (input_num > 4) || (input_num < 1)) {
+			getchar();
+			printf("잘못된 입력입니다. 1, 2, 3, 4 중 하나를 입력하세요.\n");
+			sleep(1);
+			continue;
 		}
+
+		getchar();
+		puts("");
 	
 		switch(input_num) {
 			case 1:
-				clear_terminal();
 				show_post();
-				clear_terminal();
+				sleep(1);
 				continue;
 			case 2:
-				clear_terminal();
 				write_post();
 				sleep(1);
-				clear_terminal();
 				continue;
 			case 3:
-				clear_terminal();
 				my_post();
-				clear_terminal();
+				sleep(1);
 				continue;
 			case 4:
-				clear_terminal();
 				return 0;
 			default:
-				clear_terminal();
 				break;
 		}
 	
@@ -212,6 +204,7 @@ print_post:
 		goto print_post;
 	}
 	else {
+		printf("----------------------------------------------\n");
 		printf("Title : ");
 		fgets(line, INPUT_SIZE, fp);
 		printf("%s", line);
@@ -245,6 +238,7 @@ int my_post()
 	
 	struct dirent **namelist;
 	int count = 0, cnt = 0;
+	printf("----------------------------------------\n");
 	
 	if ((count = scandir(folderPath, &namelist, NULL, alphasort) ) == -1) {
 		perror("folder open error");
@@ -278,7 +272,7 @@ int my_post()
 					while (fgets(line, INPUT_SIZE, fp) != NULL) 
 						printf("%s", line);
 						
-					printf("\n----------------------------------------\n\n");
+					printf("----------------------------------------\n");
 					
 				}
 			}

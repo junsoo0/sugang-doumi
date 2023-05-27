@@ -31,30 +31,27 @@ int evaluate_lecture() {
 		printf("[1] 강의평 보기\n");
 		printf("[2] 강의평 입력\n");
 		printf("[3] 돌아가기\n");
-		printf("----------------------------------------\n\n");
+		printf("----------------------------------------\n");
 		
 		printf("선택: [1 - 3] ");
 		scanf("%d", &option);
 		getchar();
+		puts("");
 	
 		if (option == 1 || option == 2) {
 			if (option == 1) {
-				clear_terminal();
 				show_op();
-				clear_terminal();
 				continue;
 			}
 			
 			if (option == 2) {
-				clear_terminal();
 				write_op();
-				clear_terminal();
+				sleep(1);
 				continue;
 			}
 		}
 		
 		else if (option == 3) {
-			clear_terminal();
 			return 0;
 		}
 	
@@ -81,8 +78,8 @@ int show_op()
 	}    
 	
 view:
-	printf("<강의평 조회할 과목 입력>\n\n");
-	printf("과목명 (띄어쓰기 없이 소문자로 입력) : ");
+	printf("<강의평 조회할 과목 입력>\n");
+	printf("과목명 (띄어쓰기 없이 입력) : ");
 	fgets(sub_name, INPUT_SIZE, stdin);
 	sub_name[strlen(sub_name) - 1] = '\0';    // 개행 제거
 	
@@ -90,7 +87,6 @@ view:
 	fgets(prof_name, INPUT_SIZE, stdin);
 	prof_name[strlen(prof_name) - 1] = '\0';    // 개행 제거
 	
-	printf("\n----------------------------------------\n");
 	
 	strcpy(filename, folder_path);
 	strcat(filename, "/");
@@ -105,6 +101,8 @@ view:
 		goto view;
 	}
 	
+	clear_terminal();
+	printf("========================================\n");
 	ssize_t n;
 	while ((n = read(fd, new_text, INPUT_SIZE)) > 0) {
 		write(STDOUT_FILENO, new_text, n);
@@ -113,11 +111,11 @@ view:
 	close(fd);
 	
 	int retry;
-	printf("========================================\n\n");
+	printf("========================================\n");
 	printf("[1] 현재 과목에 강의평 남기기\n");
 	printf("[2] 다른 과목의 강의평 조회\n");
 	printf("[3] 이전 화면으로 돌아가기\n");
-	printf("----------------------------------------\n\n");
+	printf("----------------------------------------\n");
 	printf("선택: [1 - 3] ");
 	
 	scanf("%d", &retry);
@@ -127,12 +125,10 @@ view:
 		if (retry == 3) return 0;
 		
 		if (retry == 2) {
-			clear_terminal();
 			goto view;
 		}
 		
 		if (retry == 1) {
-			clear_terminal();
 			write_now(filename);
 			return 0;
 		}
@@ -184,8 +180,9 @@ int write_op()
 			return 1;
 		}
 	}    
-	
-	printf("과목명 (띄어쓰기 없이 소문자로 입력) : ");
+
+	printf("<강의평 입력할 과목 입력>\n");
+	printf("과목명(띄어쓰기 없이 입력) : ");
 	fgets(sub_name, INPUT_SIZE, stdin);
 	sub_name[strlen(sub_name) - 1] = '\0';    // 개행 제거
 	
@@ -235,6 +232,7 @@ int write_op()
 	fprintf(fp, "%s\n\n", time_str);
 	
 	fclose(fp);
+	printf("작성 완료\n");
 	
 	return 0;
 }
