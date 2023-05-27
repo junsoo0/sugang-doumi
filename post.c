@@ -25,15 +25,18 @@ int free_board() {
 	int input_num;
 	
 	while (1) {
+		printf("\x1b[32m");
+		printf("자유게시판\n");
+		printf("\x1b[0m");
 		printf("----------------------------------------\n");
-		printf("1. 게시글 보기\n");
-		printf("2. 게시글 작성\n");
-		printf("3. 내가 쓴 글 보기, 삭제하기\n");
-		printf("4. 메뉴 화면으로 돌아가기\n");
+		printf("[1] 게시글 보기\n");
+		printf("[2] 게시글 작성\n");
+		printf("[3] 내가 쓴 글 보기, 삭제하기\n");
+		printf("[4] 메뉴 화면으로 돌아가기\n");
 		printf("----------------------------------------\n\n");
 	
 		while (1) {
-			printf("선택 [1 - 4] : ");
+			printf("선택: [1 - 4] ");
 			if ((scanf("%d", &input_num) != 1) || (input_num > 4) || (input_num < 1)) {
 				getchar();
 				printf("잘못된 입력입니다. 1, 2, 3, 4 중 하나를 입력하세요.\n");

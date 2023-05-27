@@ -20,17 +20,20 @@ int show_op();
 int write_now(char* filename);
 
 int evaluate_lecture() {
-	clear_terminal();
 	int option;
 	
 	while (1) {
+		clear_terminal();
+		printf("\x1b[32m");
+		printf("[강의 평가]\n");
+		printf("\x1b[0m");
 		printf("----------------------------------------\n");
-		printf("1. 강의평 보기\n");
-		printf("2. 강의평 입력\n");
-		printf("3. 메뉴 화면으로 돌아가기\n");
+		printf("[1] 강의평 보기\n");
+		printf("[2] 강의평 입력\n");
+		printf("[3] 메뉴 화면으로 돌아가기\n");
 		printf("----------------------------------------\n\n");
 		
-		printf("선택 [1 - 3] : ");
+		printf("선택: [1 - 3] ");
 		scanf("%d", &option);
 		getchar();
 	
@@ -111,11 +114,11 @@ view:
 	
 	int retry;
 	printf("========================================\n\n");
-	printf("1. 현재 과목에 강의평 남기기\n");
-	printf("2. 다른 과목의 강의평 조회\n");
-	printf("3. 이전 화면으로 돌아가기\n");
+	printf("[1] 현재 과목에 강의평 남기기\n");
+	printf("[2] 다른 과목의 강의평 조회\n");
+	printf("[3] 이전 화면으로 돌아가기\n");
 	printf("----------------------------------------\n\n");
-	printf("선택 [1 - 3] : ");
+	printf("선택: [1 - 3] ");
 	
 	scanf("%d", &retry);
 	getchar();
