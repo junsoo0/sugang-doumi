@@ -149,7 +149,7 @@ int credit_list(){
 	struct credit temp;
 	
 	printf("\x1b[32m");
-	printf("[학점 목록]\n");
+	printf("[학점 계산]\n");
 	printf("\x1b[0m");
 	printf("==============================================\n");
 	chdir(credit_path);
@@ -248,11 +248,9 @@ void print_credit_and_grade(){
 	avg_grade = total_grade / total_credit;
 	
 	
-	printf("==============================================\n");
+	printf("----------------------------------------------\n");
 	printf("총 이수학점: %d학점 / 전공: %d학점 / 교양: %d학점\n", total_credit, major, culture);
 	printf("평균평점: %.2f\n", avg_grade);
-	printf("----------------------------------------------\n");
-	puts("");
 	
 }
 

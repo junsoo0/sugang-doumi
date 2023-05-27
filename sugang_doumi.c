@@ -181,9 +181,9 @@ int main_UI() {
 int credit_UI() {
 	char input[INPUT_SIZE];
 
-	printf("\x1b[32m");
-	printf("[학점 계산 메뉴]\n");
-	printf("\x1b[0m");
+	//printf("\x1b[32m");
+	//printf("[학점 계산 메뉴]\n");
+	//printf("\x1b[0m");
 	while (1) {
 		printf("==============================================\n");
 		printf("[1] 학점 등록\n");
